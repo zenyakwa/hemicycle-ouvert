@@ -70,9 +70,31 @@ def clean_aut(a):
     a=re.sub(r'^(MM\.|Mmes|M\.|Mme)\s+','',a).strip(' ,')
     return a
 dos={}
-for k,v in X['dos'].items():
+def auto_resume(expo):
+    """Extrait automatique : la phrase de l'exposé des motifs qui annonce l'objet du texte."""
+    if not expo: return None
+    e=re.sub(r'^\s*(Mesdames,?\s*)?Messieurs,?\s*','',expo)
+    e=re.sub(r'\(\[?\d+\]?\)|\[\d+\]','',e)
+    phrases=re.split(r'(?<=[.!?])\s+(?=[A-ZÉÈÀÂÎ«])',e)
+    VERB=r'\b(vise|visent|a pour objet|a pour objectif|propose|proposons|prévoit|entend)\b'
+    TXT=r'(proposition|projet) de (loi|résolution)|ce texte|le présent'
+    pick=next((ph for ph in phrases if re.search(VERB,ph,re.I) and re.search(TXT,ph,re.I) and 40<len(ph)<600),None)
+    pick=pick or next((ph for ph in phrases if re.search(VERB,ph,re.I) and 40<len(ph)<600),None)
+    pick=pick or (phrases[0] if phrases and len(phrases[0])>40 else None)
+    if not pick: return None
+    pick=pick.strip()
+    if len(pick)>280:
+        pick=pick[:280].rsplit(' ',1)[0].rstrip(',;:')+'…'
+    return pick
+# drapeau source : 0 = rédigé d'après l'intitulé, 1 = rédigé d'après l'exposé des motifs, 2 = extrait automatique
+for k in X.get('map',{}):
+    v=X['dos'].get(k) or {}
     if k in res.R:
         dos[k]=[res.R[k], clean_aut(v.get('auteur')), v.get('promu'), 1 if v.get('expo') else 0]
+    else:
+        a=auto_resume(v.get('expo'))
+        if a or v.get('auteur') or v.get('promu'):
+            dos[k]=[a, clean_aut(v.get('auteur')), v.get('promu'), 2]
 for v in out['votes']:
     k=num2k.get(v['n'])
     if k in dos: v['dk']=k

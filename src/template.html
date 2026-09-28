@@ -397,7 +397,7 @@ function popHTML(v,nores){
   if(s.promu && !nores) meta.push(`Loi promulguée le <b>${esc(s.promu.replace(/^\w+ /,''))}</b>`);
   notes.forEach(n=>meta.push(esc(n)));
   h += `<div class="meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>`;
-  if(s.txt && v.dk) h += `<div class="src">Résumé rédigé ${s.expo?"d'après l'exposé des motifs":"d'après l'intitulé"} du texte.</div>`;
+  if(s.txt && v.dk) h += `<div class="src">${s.expo===2?"Extrait de l'exposé des motifs (résumé automatique, en attente de relecture).":"Résumé rédigé d'après "+(s.expo?"l'exposé des motifs":"l'intitulé")+" du texte."}</div>`;
   return h;
 }
 function showPop(btn){
@@ -419,7 +419,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') hidePop(); });
 addEventListener('scroll',()=>{ if(!pop.hidden) hidePop(); }, {passive:true});
 document.getElementById('sheet').addEventListener('scroll',()=>{ if(!pop.hidden) hidePop(); }, {passive:true});
 
-$('#fresh').innerHTML = `<span>Dernier scrutin : <b>${fdate(D.lastScrutin)}</b></span><span><b class="num">${D.nScrutins.toLocaleString('fr-FR')}</b> scrutins publics analysés</span><span>17<sup>e</sup> législature · open data AN</span>`;
+$('#fresh').innerHTML = `<span>Données du <b>${fdate(D.generated.slice(0,10))}</b> · dernier scrutin : <b>${fdate(D.lastScrutin)}</b></span><span><b class="num">${D.nScrutins.toLocaleString('fr-FR')}</b> scrutins publics analysés</span><span>17<sup>e</sup> législature · open data AN</span>`;
 
 /* ---------- Hemicycle geometry ---------- */
 const W=1000, H=520, CX=500, CY=505, R0=170, R1=480;
