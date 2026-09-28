@@ -1,0 +1,6 @@
+*.tmp
+__pycache__/
+.DS_Store
+Thumbs.db
+hemicycle-ouvert.html
+_to_delete/
