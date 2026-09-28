@@ -99,6 +99,26 @@ for v in out['votes']:
     k=num2k.get(v['n'])
     if k in dos: v['dk']=k
 out['dos']=dos
+# ---- questionnaire « Trouve ton groupe » ----
+spec2=importlib.util.spec_from_file_location('quiz',P('src','quiz.py')); qz=importlib.util.module_from_spec(spec2); spec2.loader.exec_module(qz)
+byn={v['n']:v for v in out['votes']}
+quiz=[]
+for item in qz.QUIZ:
+    n,q,th=item[:3]; fixed=item[3] if len(item)>3 else None
+    v=byn.get(n)
+    if not v: print('quiz : scrutin',n,'introuvable, question ignorée'); continue
+    k=v.get('dk'); info=X['dos'].get(k) or {}
+    flat=re.sub(r'\s+',' ',info.get('expo') or '')
+    if fixed and re.sub(r'\s+',' ',fixed) in flat: quote=fixed
+    else:
+        if fixed: print('quiz : citation introuvable dans l\'exposé du scrutin',n,'— extrait automatique utilisé')
+        quote=auto_resume(info.get('expo'))
+    if v['k']=='Projet de loi': src='Exposé des motifs du projet de loi (Gouvernement)'
+    elif info.get('auteur'): src='Exposé des motifs, texte déposé par '+clean_aut(info['auteur'])
+    else: src='Exposé des motifs du texte'
+    quiz.append({'n':n,'q':q,'th':th,'qt':quote,'qs':src if quote else None})
+out['quiz']=quiz
+print('quiz',len(quiz),'questions,',sum(1 for x in quiz if x['qt']),'avec citation')
 # ---- transparence : HATVP, déports, arrivée au siège ----
 TP=P('data','an-transparence.json')
 dep_by={}

@@ -83,8 +83,11 @@ section.block{margin-top:26px}
 .gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;display:grid;gap:8px;position:relative;overflow:hidden}
 .gcard:hover{border-color:var(--muted)}
 .gcard .band{position:absolute;inset:0 0 auto 0;height:5px}
-.gcard .ab{font-family:var(--display);font-weight:800;font-size:26px;line-height:1;margin-top:4px}
-.gcard .ln{font-size:13px;color:var(--muted);min-height:2.6em}
+.gbadge{position:relative;display:inline-grid;place-items:center;border-radius:12px;font-family:var(--display);font-weight:800;letter-spacing:.02em;line-height:1;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.12);flex:none}
+.gbadge img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}
+.gcard .gbadge{position:absolute;top:14px;right:14px;width:48px;height:48px;font-size:15px}
+.gcard .ab{padding-right:56px;font-family:var(--display);font-weight:800;font-size:26px;line-height:1;margin-top:4px}
+.gcard .ln{font-size:13px;color:var(--muted);min-height:2.6em;padding-right:56px}
 .gcard .row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
 .gcard .row b{color:var(--ink);font-family:var(--mono);font-weight:600}
 .meter{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden}
@@ -235,6 +238,42 @@ select,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);back
 .dport .m{color:var(--muted);font-style:italic}
 .sh-sec h4 .ib{vertical-align:-5px}
 .vresume{font-size:14px;margin:0 0 10px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--surface)}
+.qz{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:22px;max-width:820px}
+.qz-intro p{max-width:62ch;margin:0 0 10px}
+.qz-intro ul{margin:0 0 16px;padding-left:18px;color:var(--muted);font-size:14px;display:grid;gap:4px}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);padding:11px 20px;border-radius:999px;font-weight:700;cursor:pointer;font-size:15px}
+.btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.qz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--muted);margin-bottom:8px}
+.qz-prog{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-bottom:18px}
+.qz-prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.qz-q{font-size:clamp(19px,3vw,24px);font-weight:700;line-height:1.3;text-wrap:balance;margin:6px 0 14px}
+.qz-quote{margin:0 0 6px;padding:12px 14px;border-left:3px solid var(--line);background:var(--surface-2);border-radius:0 8px 8px 0;font-size:14px;line-height:1.5}
+.qz-quote cite{display:block;margin-top:6px;font-size:12px;color:var(--muted);font-style:normal}
+.qz-ans{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+@media (max-width:520px){.qz-ans{grid-template-columns:1fr}}
+.qz-ans button{padding:14px 10px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);cursor:pointer;font-weight:800;font-size:15px}
+.qz-ans button[data-a="p"]:hover,.qz-ans button[data-a="p"][aria-pressed="true"]{border-color:var(--pour);color:var(--pour)}
+.qz-ans button[data-a="c"]:hover,.qz-ans button[data-a="c"][aria-pressed="true"]{border-color:var(--contre);color:var(--contre)}
+.qz-ans button[data-a="s"]:hover,.qz-ans button[data-a="s"][aria-pressed="true"]{border-color:var(--muted)}
+.qz-nav{display:flex;justify-content:space-between;margin-top:14px}
+.qz-nav button{background:none;border:0;color:var(--muted);cursor:pointer;font-weight:600;font-size:13px;padding:6px 0}
+.qz-win{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:18px;border-radius:12px;border:2px solid var(--line);margin-bottom:18px}
+.qz-win>div:nth-child(2){flex:1 1 240px;min-width:0}
+.qz-win h3{margin:2px 0 4px;font-family:var(--display);font-weight:800;font-size:clamp(24px,3.6vw,32px);line-height:1;text-transform:uppercase;text-wrap:balance}
+.qz-win .pct{font-family:var(--display);font-weight:800;font-size:48px;line-height:1;margin-left:auto}
+.qz-rank{display:grid;gap:6px;margin:8px 0 20px}
+.qz-rank .r{display:grid;grid-template-columns:70px 1fr 48px;gap:10px;align-items:center;font-size:13px;cursor:pointer;background:none;border:0;padding:2px 0;text-align:left}
+.qz-rank .r b{font-weight:700}
+.qz-rank .r .tr{height:12px;background:var(--surface-2);border-radius:6px;overflow:hidden}
+.qz-rank .r .tr i{display:block;height:100%}
+.qz-rank .r .v{font-family:var(--mono);text-align:right}
+.qz-det{width:100%;border-collapse:collapse;font-size:13px}
+.qz-det td:first-child{min-width:190px}
+.qz-det td,.qz-det th{padding:7px 5px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.qz-det th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.qz-det .gd{display:flex;flex-wrap:wrap;gap:3px}
+.qz-det .gd i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.qz-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 6px}
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);display:grid;gap:4px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -252,6 +291,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
     <button role="tab" id="tab-hemi" aria-selected="true" data-tab="hemi">L'hémicycle</button>
     <button role="tab" id="tab-votes" aria-selected="false" data-tab="votes">Les votes</button>
     <button role="tab" id="tab-game" aria-selected="false" data-tab="game">Devine le vote</button>
+    <button role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">Trouve ton groupe</button>
   </nav>
 
   <main>
@@ -316,6 +356,15 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="game" id="game"></div>
       </section>
     </div>
+    <div id="view-quiz" hidden>
+      <section class="block" style="margin-top:0">
+        <div class="block-h">
+          <h2>Trouve ton groupe</h2>
+          <p>20 vrais votes de l'Assemblée. Répondez, et découvrez quel groupe a voté comme vous.</p>
+        </div>
+        <div id="quiz"></div>
+      </section>
+    </div>
   </main>
 
   <footer>
@@ -366,6 +415,10 @@ const avgPart = Math.round(100*deps.reduce((a,d)=>a+d.part/Math.max(1,d.elig),0)
 const avgKey = Math.round(100*deps.reduce((a,d)=>a+d.kp/Math.max(1,d.ke),0)/deps.length);
 const avgLoy = Math.round(deps.filter(d=>d.loy!=null).reduce((a,d)=>a+d.loy,0)/deps.filter(d=>d.loy!=null).length);
 function age(b){ const t=new Date('2026-09-28'), d=new Date(b); let a=t.getFullYear()-d.getFullYear(); if(t<new Date(t.getFullYear(),d.getMonth(),d.getDate())) a--; return a; }
+function groupBadge(g,px){
+  const fs=Math.round(px*(g.short.length>5?0.2:g.short.length>3?0.28:0.36));
+  return `<span class="gbadge" style="width:${px}px;height:${px}px;font-size:${fs}px;background:${g.col};color:${textColorOn(g.col)}" aria-hidden="true">${esc(g.short)}<img src="logos/${esc(g.short)}.png" alt="" loading="lazy" onerror="this.remove()"></span>`;
+}
 function initials(d){ return (d.p[0]||'')+(d.n.replace(/^(de |d'|le |la |du )/i,'')[0]||''); }
 function avatar(d,cls){ const g=G[d.g]; return `<span class="av ${cls||''}" style="background:${g?g.col:'#888'}">${esc(initials(d))}</span>`; }
 function textColorOn(hex){ const h=hex.replace('#',''); const r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (r*299+g*587+b*114)/1000>150?'#111':'#fff'; }
@@ -498,7 +551,6 @@ function highlight(){
 function selectGroup(id){
   selGroup=id; renderLegend(); highlight();
   id? renderGroup(G[id]) : renderOverview();
-  if(id) $('#groupsArea').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderOverview(){
   const maj=289;
@@ -507,6 +559,7 @@ function renderOverview(){
   <div class="gcards">${groupsOrdered.map(g=>`
     <button class="gcard" data-g="${g.id}">
       <span class="band" style="background:${g.col}"></span>
+      ${groupBadge(g,48)}
       <span class="ab">${esc(g.short)}</span>
       <span class="ln">${esc(g.l)}</span>
       <span class="meter" title="${g.n} sièges"><i style="width:${(100*g.n/122).toFixed(1)}%;background:${g.col}"></i></span>
@@ -533,7 +586,7 @@ function renderGroup(g){
   $('#groupsArea').innerHTML = `
   <div class="gpanel">
     <div class="gp-top"><span class="band" style="background:${g.col}"></span>
-      <div style="padding-left:6px"><h2>${esc(g.short)}</h2><div class="full">${esc(g.l)}${g.pres?` · présidé par <a href="#" data-dep="${g.pres.i}" style="font-weight:600">${esc(g.pres.p+' '+g.pres.n)}</a>`:''}</div></div>
+      <div style="padding-left:6px;display:flex;gap:14px;align-items:center">${groupBadge(g,56)}<div><h2>${esc(g.short)}</h2><div class="full">${esc(g.l)}${g.pres?` · présidé par <a href="#" data-dep="${g.pres.i}" style="font-weight:600">${esc(g.pres.p+' '+g.pres.n)}</a>`:''}</div></div></div>
       <button class="back">← Tous les groupes</button>
     </div>
     <div class="stats">
@@ -656,7 +709,8 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !overlay.hidden)
 /* ---------- Tabs ---------- */
 function showTab(t){
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
-  ['hemi','votes','game'].forEach(k=>$('#view-'+k).hidden = k!==t);
+  ['hemi','votes','game','quiz'].forEach(k=>$('#view-'+k).hidden = k!==t);
+  if(t==='quiz') renderQuiz();
   if(t==='game' && !gameState) newRound();
   try{ localStorage.setItem('ho-tab',t); }catch(e){}
 }
@@ -764,8 +818,80 @@ $('#game').addEventListener('click',e=>{
 });
 document.addEventListener('click',e=>{ const a=e.target.closest('a[href="#"]'); if(a) e.preventDefault(); });
 
+/* ---------- Trouve ton groupe ---------- */
+const QUIZ=(D.quiz||[]).map(q=>Object.assign({},q,{vi:votes.findIndex(v=>v.n===q.n)})).filter(q=>q.vi>=0);
+const QG=groupsOrdered.filter(g=>g.a!=='NI');
+let qzState={step:-1,ans:{}};
+try{ const s=JSON.parse(localStorage.getItem('ho-quiz')||'null'); if(s&&s.ans) qzState=s; }catch(e){}
+function qzSave(){ try{ localStorage.setItem('ho-quiz',JSON.stringify(qzState)); }catch(e){} }
+const ANS={p:'Pour',c:'Contre',s:'Sans avis'};
+function groupPos(v,gid){ const x=v.gv.find(y=>y[0]===gid); return x?x[1]:null; }
+function qzScores(){
+  return QG.map(g=>{ let s=0,n=0,same=0;
+    QUIZ.forEach(q=>{ const a=qzState.ans[q.n]; if(a!=='p'&&a!=='c') return; const gp=groupPos(votes[q.vi],g.id); if(!gp) return;
+      n++; const my=a==='p'?'pour':'contre'; if(gp===my){s+=1;same++;} else if(gp==='abstention') s+=.5; });
+    return {g,pct:n?Math.round(100*s/n):0,n,same}; }).filter(r=>r.n>0).sort((a,b)=>b.pct-a.pct||b.same-a.same);
+}
+function renderQuiz(){
+  const el=$('#quiz'); const st=qzState.step;
+  if(st<0){
+    el.innerHTML=`<div class="qz qz-intro">
+      <p>Chaque question reprend un <b>vrai texte</b> voté par l'Assemblée entre 2024 et 2026. Vous votez « pour », « contre », ou vous passez. On compare ensuite vos réponses au vote de la majorité de chaque groupe.</p>
+      <ul><li>20 questions, environ 3 minutes.</li><li>Sous chaque question : un extrait officiel du texte, et le bouton ⓘ pour en savoir plus.</li><li>C'est un jeu, pas une consigne de vote : 20 votes ne résument pas un programme politique.</li></ul>
+      <button class="btn" data-qz="start">${Object.keys(qzState.ans).length?'Reprendre le questionnaire':'Commencer'}</button>
+      ${Object.keys(qzState.ans).length?' <button class="btn ghost" data-qz="reset">Recommencer à zéro</button>':''}
+    </div>`; return;
+  }
+  if(st>=QUIZ.length){ renderQuizResult(); return; }
+  const q=QUIZ[st], v=votes[q.vi], a=qzState.ans[q.n];
+  el.innerHTML=`<div class="qz">
+    <div class="qz-top"><span>Question <b class="num">${st+1}</b> / ${QUIZ.length}</span><span class="tag">${esc(q.th)}</span></div>
+    <div class="qz-prog"><i style="width:${100*st/QUIZ.length}%"></i></div>
+    <div class="qz-q">${esc(q.q)}${ib(q.vi,true)}</div>
+    ${q.qt?`<blockquote class="qz-quote">« ${esc(q.qt)} »<cite>L'argument des auteurs du texte · ${esc(q.qs)} · <a href="${AN}/dyn/17/scrutins/${v.n}" target="_blank" rel="noopener">scrutin n° ${v.n}</a></cite></blockquote>`:`<p class="note">Texte voté le ${fdate(v.dt)} · <a href="${AN}/dyn/17/scrutins/${v.n}" target="_blank" rel="noopener">scrutin n° ${v.n}</a></p>`}
+    <div class="qz-ans">${['p','c','s'].map(k=>`<button data-a="${k}" aria-pressed="${a===k}">${ANS[k]}</button>`).join('')}</div>
+    <div class="qz-nav"><button data-qz="prev" ${st===0?'hidden':''}>← Question précédente</button><button data-qz="skip">Passer →</button></div>
+  </div>`;
+}
+function renderQuizResult(){
+  const R=qzScores(); const el=$('#quiz');
+  const answered=QUIZ.filter(q=>['p','c'].includes(qzState.ans[q.n])).length;
+  if(answered<3){ el.innerHTML=`<div class="qz"><p>Vous avez répondu à ${answered} question${answered>1?'s':''} seulement : il en faut au moins 3 pour comparer.</p><button class="btn" data-qz="restart">Reprendre au début</button></div>`; return; }
+  const top=R[0], g=top.g;
+  el.innerHTML=`<div class="qz">
+    <div class="qz-win" style="border-color:${g.col}">${groupBadge(g,64)}
+      <div><div class="note">Le groupe qui a le plus voté comme vous</div><h3>${esc(g.l)}</h3><div class="note">Même vote sur ${top.same} question${top.same>1?'s':''} sur ${top.n}</div></div>
+      <div class="pct">${top.pct} %</div></div>
+    <div class="qz-actions">
+      <button class="btn" data-qz="group" data-g="${g.id}">Voir ce groupe dans l'hémicycle</button>
+      <button class="btn ghost" data-qz="restart">Refaire le questionnaire</button>
+    </div>
+    <h4 style="margin:18px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Tous les groupes</h4>
+    <div class="qz-rank">${R.map(r=>`<button class="r" data-qz="group" data-g="${r.g.id}" title="${esc(r.g.l)}"><b>${esc(r.g.short)}</b><span class="tr"><i style="width:${r.pct}%;background:${r.g.col}"></i></span><span class="v">${r.pct} %</span></button>`).join('')}</div>
+    <p class="note">Score : 1 point quand le groupe a voté comme vous, ½ point quand il s'est abstenu, sur les questions où vous avez voté « pour » ou « contre ». Les non-inscrits ne forment pas un groupe et ne sont pas classés. Le groupe UDR n'existait pas encore lors de certains votes : il est comparé sur moins de questions.</p>
+    <h4 style="margin:22px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Vos réponses, question par question</h4>
+    <div style="overflow-x:auto"><table class="qz-det"><thead><tr><th>Question</th><th>Vous</th><th>${esc(g.short)}</th><th>Tous les groupes (de gauche à droite)</th></tr></thead><tbody>
+    ${QUIZ.map(q=>{ const v=votes[q.vi], a=qzState.ans[q.n]||'s', gp=groupPos(v,g.id);
+      return `<tr><td><a href="#" data-openvote="${q.vi}">${esc(q.q)}</a>${ib(q.vi)}</td><td><span class="pos ${a==='p'?'p':a==='c'?'c':'x'}">${ANS[a]}</span></td><td>${gp?`<span class="pos ${posCls[gp]}">${esc(gp)}</span>`:'—'}</td><td><span class="gd">${QG.map(x=>{const p=groupPos(v,x.id); return `<i title="${esc(x.short)} : ${esc(p||'absent')}" style="background:${p?posColor[p]:'var(--absent)'}"></i>`;}).join('')}</span></td></tr>`; }).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+$('#quiz').addEventListener('click',e=>{
+  if(e.target.closest('.ib')) return;
+  const ov=e.target.closest('[data-openvote]'); if(ov){ e.preventDefault(); gotoVote(+ov.dataset.openvote); return; }
+  const b=e.target.closest('[data-a]');
+  if(b){ const q=QUIZ[qzState.step]; qzState.ans[q.n]=b.dataset.a; qzState.step++; qzSave(); renderQuiz(); $('#view-quiz').scrollIntoView({block:'start'}); return; }
+  const c=e.target.closest('[data-qz]'); if(!c) return; const k=c.dataset.qz;
+  if(k==='start'){ const firstOpen=QUIZ.findIndex(q=>!(q.n in qzState.ans)); qzState.step=firstOpen<0?QUIZ.length:firstOpen; }
+  if(k==='reset'||k==='restart'){ qzState={step:0,ans:{}}; }
+  if(k==='prev') qzState.step=Math.max(0,qzState.step-1);
+  if(k==='skip'){ qzState.ans[QUIZ[qzState.step].n]='s'; qzState.step++; }
+  if(k==='group'){ showTab('hemi'); selectGroup(c.dataset.g); $('#view-hemi').scrollIntoView({block:'start'}); return; }
+  qzSave(); renderQuiz();
+});
+
 let startTab='hemi'; try{ startTab=localStorage.getItem('ho-tab')||'hemi'; }catch(e){}
-if(location.hash==='#votes'||location.hash==='#jeu') startTab = location.hash==='#votes'?'votes':'game';
-showTab(['hemi','votes','game'].includes(startTab)?startTab:'hemi');
+if(location.hash==='#votes') startTab='votes'; if(location.hash==='#jeu') startTab='game'; if(location.hash==='#questionnaire') startTab='quiz';
+showTab(['hemi','votes','game','quiz'].includes(startTab)?startTab:'hemi');
 })();
 </script>
