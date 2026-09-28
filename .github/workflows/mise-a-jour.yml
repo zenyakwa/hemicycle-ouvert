@@ -57,8 +57,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Préparer les fichiers du site
-        run: mkdir _site && cp index.html _site/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reconstruire et préparer le site
+        run: |
+          python src/prep.py
+          mkdir _site && cp index.html _site/
+          if [ -d logos ]; then cp -r logos _site/; fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
