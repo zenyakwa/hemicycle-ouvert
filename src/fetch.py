@@ -103,6 +103,8 @@ def build_core(amo_zip, scr_zip):
             "comq": ((com or {}).get("infosQualite") or {}).get("codeQualite"),
             "pp": p_org.get("libelle") if p_org else None,
             "d": an["dateDebut"], "pe": (an.get("mandature") or {}).get("premiereElection"),
+            "hatvp": a.get("uri_hatvp"),
+            "cm": None if (an.get("election") or {}).get("causeMandat") in (None, "élections générales") else an["election"]["causeMandat"],
         })
     idx = {d["id"]: i for i, d in enumerate(deps)}
 
@@ -240,6 +242,61 @@ def fetch_dossier(uid):
             "expo": expo, "senat": bool(re.search(r"Dépôt au Sénat|déposée? au Sénat", txt[:3000], re.I))}
 
 
+# ------------------------------------------------------------------ registre des déports
+DEPORT_RE = re.compile(r"Date\s*:\s*(?P<date>.+?)\s+Cible\s*:\s*(?P<cible>.+?)\s+Portée\s*:\s*(?P<portee>.+?)\s+Lecture\s*:\s*(?P<lecture>.+?)\s+Instance\s*:\s*(?P<instance>Séance publique et Commission|Séance publique|Commission)\s*(?P<motif>.*)$", re.S)
+
+
+def parse_deport(h):
+    t = page_text(h)
+    m = DEPORT_RE.search(t)
+    if not m:
+        return None
+    motif = re.split(r"\s(?:Partager|Retour|Imprimer)\b", m.group("motif"))[0].strip()
+    return {"date": m.group("date").strip(), "cible": m.group("cible").strip(), "portee": m.group("portee").strip(),
+            "lecture": m.group("lecture").strip(), "instance": m.group("instance"), "motif": motif[:400]}
+
+
+def update_deports(core):
+    """Registre public des déports (www.assemblee-nationale.fr/dyn/17/deports).
+    Chaque jour : la page d'accueil du registre (derniers déports).
+    Une fois par semaine : un passage député par député pour ne rien manquer."""
+    path = P("data", "an-transparence.json")
+    cache = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {"swept": "", "deports": {}}
+    if LOCAL:
+        return cache
+    ids = set()
+    h = get(SITE + "/dyn/%s/deports" % LEG)
+    if h:
+        ids |= set(re.findall(r"DPTR5L%sPA\d+D\d+" % LEG, h.decode("utf-8", "replace")))
+    week_ago = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 7 * 86400))
+    if cache.get("swept", "") < week_ago:
+        log("  passage complet du registre des déports (%d députés)…" % len(core["deputes"]))
+        for d in core["deputes"]:
+            try:
+                r = get(SITE + "/dyn/%s/deports?depute=%s" % (LEG, d["id"]))
+                if r:
+                    ids |= set(x for x in re.findall(r"DPTR5L%sPA\d+D\d+" % LEG, r.decode("utf-8", "replace")) if (d["id"] + "D") in x)
+            except Exception as e:
+                log("    %s ignoré (%s)" % (d["id"], e))
+            time.sleep(0.2)
+        cache["swept"] = time.strftime("%Y-%m-%d", time.gmtime())
+    new = sorted(i for i in ids if i not in cache["deports"])
+    for i in new:
+        try:
+            r = get(SITE + "/dyn/deports/" + i)
+            info = parse_deport(r.decode("utf-8", "replace")) if r else None
+            if info:
+                info["pa"] = re.search(r"PA\d+", i).group(0)
+                cache["deports"][i] = info
+                log("  nouveau déport : %s — %s" % (i, info["cible"][:60]))
+        except Exception as e:
+            log("  déport %s ignoré (%s)" % (i, e))
+        time.sleep(0.3)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=0)
+    return cache
+
+
 def main():
     log("Téléchargement des députés et des scrutins…")
     core, scr = build_core(get(URLS["amo"]), get(URLS["scr"]))
@@ -279,6 +336,13 @@ def main():
             log("  [%d/%d] %s — ignoré (%s)" % (i, len(missing), k, e))
         time.sleep(0.5)
     cache["map"] = new_map
+
+    log("Registre des déports…")
+    try:
+        dep = update_deports(core)
+        log("  %d déports enregistrés" % len(dep["deports"]))
+    except Exception as e:
+        log("  registre des déports indisponible (%s) — on garde les données précédentes" % e)
 
     with gzip.open(P("data", "an-data.json.gz"), "wt", encoding="utf-8") as f:
         json.dump(core, f, ensure_ascii=False, separators=(",", ":"))

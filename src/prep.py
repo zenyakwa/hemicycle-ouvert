@@ -99,6 +99,18 @@ for v in out['votes']:
     k=num2k.get(v['n'])
     if k in dos: v['dk']=k
 out['dos']=dos
+# ---- transparence : HATVP, déports, arrivée au siège ----
+TP=P('data','an-transparence.json')
+dep_by={}
+if os.path.exists(TP):
+    for k,v in sorted(json.load(open(TP,encoding='utf-8'))['deports'].items(), reverse=True):
+        dep_by.setdefault(v['pa'],[]).append([v['date'],v['cible'],v['portee'],v.get('motif','')])
+for d in out['deputes']:
+    h=d.pop('hatvp',None)
+    if h and 'pages_nominatives/' in h: d['hv']=h.split('pages_nominatives/')[1]
+    if d['id'] in dep_by: d['dp']=dep_by[d['id']]
+    if not d.get('cm'): d.pop('cm',None)
+print('déports', sum(len(v) for v in dep_by.values()))
 json.dump(out,open(P('data','data.json'),'w'),ensure_ascii=False,separators=(',',':'))
 print('résumés',len(dos),'votes avec résumé',sum(1 for v in out['votes'] if v.get('dk')))
 

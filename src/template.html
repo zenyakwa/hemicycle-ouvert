@@ -226,6 +226,14 @@ select,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);back
 .pop .meta{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);display:grid;gap:3px;font-size:12.5px;color:var(--muted)}
 .pop .meta b{color:var(--ink);font-weight:600}
 .pop .src{font-size:11.5px;color:var(--muted);margin-top:8px;font-style:italic}
+.tlist{display:grid;gap:10px;font-size:13.5px}
+.trow{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start}
+.trow .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);font-weight:700;font-size:12px}
+.trow b{font-weight:600}
+.dport{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface-2);display:grid;gap:3px;font-size:13px}
+.dport .d{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.dport .m{color:var(--muted);font-style:italic}
+.sh-sec h4 .ib{vertical-align:-5px}
 .vresume{font-size:14px;margin:0 0 10px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--surface)}
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);display:grid;gap:4px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -400,10 +408,22 @@ function popHTML(v,nores){
   if(s.txt && v.dk) h += `<div class="src">${s.expo===2?"Extrait de l'exposé des motifs (résumé automatique, en attente de relecture).":"Résumé rédigé d'après "+(s.expo?"l'exposé des motifs":"l'intitulé")+" du texte."}</div>`;
   return h;
 }
+const TRANSP_HELP = `<div class="k">Transparence</div>
+  <p><b>HATVP</b> : la Haute Autorité pour la transparence de la vie publique publie les déclarations d'intérêts (activités, participations, fonctions) et de patrimoine des députés.</p>
+  <div class="meta">
+    <span><b>Déport</b> : un député se retire volontairement d'un débat ou d'un vote où il pourrait avoir un conflit d'intérêts. Les déports sont inscrits dans un registre public de l'Assemblée.</span>
+    <span><b>Démission d'office</b> : le Conseil constitutionnel peut retirer son mandat à un député, par exemple après une peine d'inéligibilité ou des comptes de campagne irréguliers.</span>
+    <span>Le casier judiciaire n'est pas public en France : il n'est pas affiché ici.</span>
+  </div>
+  <div class="src">Sources : hatvp.fr et assemblee-nationale.fr.</div>`;
 function showPop(btn){
+  if(btn.dataset.ibt){ if(popFor && popFor!==btn) popFor.setAttribute('aria-expanded','false'); pop.innerHTML=TRANSP_HELP; pop.hidden=false; popFor=btn; btn.setAttribute('aria-expanded','true'); placePop(btn); return; }
   const v=votes[+btn.dataset.ib]; if(!v) return;
   if(popFor && popFor!==btn) popFor.setAttribute('aria-expanded','false');
   pop.innerHTML=popHTML(v, btn.dataset.nores==='1'); pop.hidden=false; popFor=btn; btn.setAttribute('aria-expanded','true');
+  placePop(btn);
+}
+function placePop(btn){
   const r=btn.getBoundingClientRect(), pw=pop.offsetWidth, ph=pop.offsetHeight;
   let x=Math.min(Math.max(12, r.left+r.width/2-pw/2), innerWidth-pw-12);
   let y=r.bottom+8; if(y+ph>innerHeight-8) y=Math.max(8, r.top-ph-8);
@@ -605,6 +625,14 @@ function openDep(i){
     <p class="note" style="margin-top:10px">${d.part.toLocaleString('fr-FR')} votes exprimés sur ${d.elig.toLocaleString('fr-FR')} scrutins publics depuis le début du mandat.</p>
   </div>
   <div class="sh-sec">
+    <h4>Transparence<button type="button" class="ib" data-ibt="1" aria-label="Que signifient ces informations ?" aria-expanded="false">i</button></h4>
+    <div class="tlist">
+      <div class="trow"><span class="ic">€</span><div>${d.hv?`<a href="https://www.hatvp.fr/pages_nominatives/${esc(d.hv)}" target="_blank" rel="noopener"><b>Déclarations d'intérêts et de patrimoine</b></a> <span class="note">sur le site de la HATVP</span>`:'<span class="note">Pas de page HATVP référencée.</span>'}</div></div>
+      <div class="trow"><span class="ic">⇥</span><div>${d.dp&&d.dp.length?`<b>${d.dp.length} déport${d.dp.length>1?'s':''} déclaré${d.dp.length>1?'s':''}</b><div style="display:grid;gap:6px;margin-top:6px">${d.dp.map(x=>`<div class="dport"><span class="d">${esc(x[0])} · ${esc(x[2])}</span><span>${esc(x[1])}</span>${x[3]?`<span class="m">Motif : ${esc(x[3])}</span>`:''}</div>`).join('')}</div>`:'Aucun déport déclaré au registre de l\'Assemblée.'}</div></div>
+      <div class="trow"><span class="ic">⌂</span><div>${d.cm?`<b>Arrivée en cours de législature</b> : ${esc(d.cm)}.${/office/.test(d.cm)?' <span class="note">Son prédécesseur a été déclaré démissionnaire d\'office par le Conseil constitutionnel.</span>':/annulation/.test(d.cm)?' <span class="note">L\'élection précédente avait été annulée par le Conseil constitutionnel.</span>':''}`:'Élu lors des élections générales de juillet 2024.'}</div></div>
+    </div>
+  </div>
+  <div class="sh-sec">
     <h4>Ses derniers votes clés</h4>
     ${shown.length? shown.map(v=>{ const c=v.v[d.i]; const pc={p:'p',c:'c',a:'a'}[c]||'x'; return `<div class="dvote"><div><div class="d">${fdate(v.dt)} · ${esc(v.k)} · ${v.so==='adopté'?'adopté':'rejeté'}</div><a href="${AN}/dyn/17/scrutins/${v.n}" target="_blank" rel="noopener">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</div><span class="pos ${pc}">${posName[c]}</span></div>`; }).join('') : '<p class="note">Aucun vote clé depuis son arrivée.</p>'}
   </div>
@@ -615,6 +643,7 @@ function openDep(i){
       <a class="lnk" href="${AN}/dyn/deputes/${d.id}/travaux-parlementaires" target="_blank" rel="noopener">Travaux parlementaires ${EXT}</a>
       <a class="lnk" href="${AN}/dyn/deputes/${d.id}/documents" target="_blank" rel="noopener">Textes déposés ${EXT}</a>
       <a class="lnk" href="${AN}/dyn/deputes/${d.id}/questions" target="_blank" rel="noopener">Questions au Gouvernement ${EXT}</a>
+      <a class="lnk" href="${AN}/dyn/17/deports?depute=${d.id}" target="_blank" rel="noopener">Registre des déports ${EXT}</a>
     </div>
   </div>`;
   overlay.hidden=false; document.body.style.overflow='hidden';

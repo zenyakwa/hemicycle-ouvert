@@ -4,6 +4,7 @@ Un site simple et ludique pour suivre l'Assemblée nationale (17ᵉ législature
 
 - **L'hémicycle** : les 577 sièges colorés par groupe politique, cliquables.
 - **Fiches députés** : circonscription, commission, participation, fidélité au groupe, derniers votes clés, liens vers le site officiel.
+- **Transparence** : lien vers les déclarations HATVP, déports déclarés au registre de l'Assemblée, conditions d'arrivée au siège.
 - **Les votes** : 314 votes clés classés par thème (santé, éducation, budget, armées, immigration…), avec un résumé « En bref » de chaque texte.
 - **Devine le vote** : un jeu pour deviner comment chaque groupe a voté.
 
@@ -23,7 +24,7 @@ Instantané du 28 septembre 2026 (dernier scrutin : 21 juillet 2026).
 
 Chaque nuit, GitHub lance `.github/workflows/mise-a-jour.yml` :
 
-1. `src/fetch.py` télécharge les députés, les scrutins et les dossiers législatifs sur data.assemblee-nationale.fr, puis les fiches des nouveaux textes sur assemblee-nationale.fr.
+1. `src/fetch.py` télécharge les députés, les scrutins et les dossiers législatifs sur data.assemblee-nationale.fr, puis les fiches des nouveaux textes et le registre des déports sur assemblee-nationale.fr.
 2. `src/prep.py` classe les votes par thème, calcule les statistiques et reconstruit `index.html`.
 3. Si quelque chose a changé, les nouvelles données sont enregistrées dans le dépôt et le site est republié.
 
