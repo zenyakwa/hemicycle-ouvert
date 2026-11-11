@@ -12,7 +12,7 @@ Site 100 % statique : tout tient dans `index.html` (aucun serveur nécessaire).
 
 ## Voir le site
 
-- En ligne : via GitHub Pages (voir l'onglet *Settings → Pages* du dépôt).
+- En ligne : https://hemicycle.scriptek.eu (hébergé sur le serveur Scriptek, publié par Dokploy à chaque modification du dépôt).
 - En local : ouvrir `index.html` dans un navigateur.
 
 ## Données
@@ -22,17 +22,17 @@ Instantané du 28 septembre 2026 (dernier scrutin : 21 juillet 2026).
 
 ## Mise à jour automatique
 
-Chaque nuit, GitHub lance `.github/workflows/mise-a-jour.yml` :
+Chaque nuit, n8n (sur le serveur Scriptek) appelle le service `updater/` :
 
 1. `src/fetch.py` télécharge les députés, les scrutins et les dossiers législatifs sur data.assemblee-nationale.fr, puis les fiches des nouveaux textes et le registre des déports sur assemblee-nationale.fr.
 2. `src/prep.py` classe les votes par thème, calcule les statistiques et reconstruit `index.html`.
-3. Si quelque chose a changé, les nouvelles données sont enregistrées dans le dépôt et le site est republié.
+3. Si quelque chose a changé, les nouvelles données sont poussées sur GitHub, et Dokploy republie le site.
 
-Pour lancer une mise à jour tout de suite : onglet **Actions** → **Mise à jour du site** → **Run workflow**.
+Le service renvoie un compte rendu JSON à n8n (`POST /run`, dernier résultat sur `GET /status`).
+
+En secours, la même mise à jour peut être lancée sur GitHub : onglet **Actions** → **Mise à jour (secours)** → **Run workflow**.
 
 Pour les nouveaux textes, le résumé « En bref » est d'abord un extrait automatique de l'exposé des motifs. Pour le remplacer par un vrai résumé, ajoutez une ligne dans `src/resumes.py` (la clé est l'identifiant du dossier, ex. `"17N52746"`).
-
-Réglage à faire une fois : **Settings → Pages → Source : GitHub Actions**.
 
 ## Structure
 
@@ -43,6 +43,8 @@ src/template.html       gabarit HTML/CSS/JS (la balise __DATA__ reçoit les donn
 src/prep.py             classement par thème, statistiques, fusion des résumés
 src/resumes.py          résumés « En bref » des textes (à relire / corriger)
 data/                   données brutes et préparées
+updater/                service de mise à jour appelé par n8n (Docker)
+Dockerfile              publication du site (nginx) par Dokploy
 ```
 
 Pour régénérer à la main :

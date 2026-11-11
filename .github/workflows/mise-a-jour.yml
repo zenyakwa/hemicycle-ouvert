@@ -1,18 +1,14 @@
-# Met à jour les données de l'Assemblée nationale chaque nuit et republie le site.
-# Lancement manuel possible : onglet « Actions » → « Mise à jour du site » → « Run workflow ».
-name: Mise à jour du site
+# SECOURS UNIQUEMENT. La mise à jour normale tourne chaque nuit sur le serveur Scriptek
+# (service updater/ déclenché par n8n), et le site est publié par Dokploy sur
+# https://hemicycle.scriptek.eu à chaque modification du dépôt.
+# Lancement manuel possible : onglet « Actions » → « Mise à jour (secours) » → « Run workflow ».
+name: Mise à jour (secours)
 
 on:
-  schedule:
-    - cron: "17 4 * * *"   # tous les jours vers 6 h (heure de Paris)
-  workflow_dispatch:        # bouton « Run workflow »
-  push:
-    branches: [main]        # republie aussi à chaque modification envoyée sur GitHub
+  workflow_dispatch:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: site
@@ -21,7 +17,6 @@ concurrency:
 jobs:
   donnees:
     name: Télécharger les nouvelles données
-    if: github.event_name != 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -35,39 +30,12 @@ jobs:
         run: python src/prep.py
       - name: Enregistrer les changements
         run: |
-          git config user.name "mise-a-jour-auto"
+          git config user.name "mise-a-jour-secours"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data index.html
           if git diff --cached --quiet; then
             echo "Aucune nouveauté."
           else
-            git commit -m "Mise à jour automatique des données ($(date -u +%Y-%m-%d))"
+            git commit -m "Mise à jour des données, secours GitHub ($(date -u +%Y-%m-%d))"
             git push
           fi
-
-  publier:
-    name: Publier le site
-    needs: donnees
-    if: always() && (needs.donnees.result == 'success' || needs.donnees.result == 'skipped')
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Reconstruire et préparer le site
-        run: |
-          python src/prep.py
-          mkdir _site && cp index.html _site/
-          if [ -d logos ]; then cp -r logos _site/; fi
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - id: deploy
-        uses: actions/deploy-pages@v4
