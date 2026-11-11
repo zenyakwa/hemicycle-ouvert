@@ -58,7 +58,12 @@ def zip_json(data, keep=lambda name: True):
     z = zipfile.ZipFile(io.BytesIO(data))
     for name in z.namelist():
         if name.endswith(".json") and keep(name):
-            yield name, json.loads(z.read(name).decode("utf-8"))
+            yield name, json.loads(z.read(name).decode("utf-8"), object_hook=nil_to_none)
+
+
+def nil_to_none(d):
+    # Les données de l'Assemblée codent les valeurs vides en {"@xsi:nil": "true"} : on les remplace par None.
+    return None if "@xsi:nil" in d else d
 
 
 def arr(x):
@@ -89,6 +94,8 @@ def build_core(amo_zip, scr_zip):
         lieu = an["election"]["lieu"]
         ec = a["etatCivil"]
         prof = ((a.get("profession") or {}).get("libelleCourant") or "")
+        if not isinstance(prof, str):
+            prof = ""
         c_org = org.get(com["organes"]["organeRef"]) if com else None
         p_org = org.get(pp["organes"]["organeRef"]) if pp else None
         deps.append({
