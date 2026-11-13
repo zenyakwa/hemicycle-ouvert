@@ -40,3 +40,10 @@ def test_lexique_dans_les_donnees(data):
     lex = data["lex"]
     assert [x[0] for x in lex] == [t["id"] for t in termes()]
     assert all(len(x) == 4 for x in lex)
+
+
+def test_censure_seuil_exact():
+    d = {t["id"]: t["definition"] for t in termes()}
+    assert "majorité absolue des membres composant l'Assemblée" in d["motion-de-censure"]
+    assert "au moins 289" not in d["motion-de-censure"]
+    assert d["proposition-de-resolution"].startswith("Texte proposé")

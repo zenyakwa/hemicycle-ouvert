@@ -35,7 +35,7 @@ function renderScrutin(v){
         <div class="bnums"><span><b class="num">${p}</b> pour</span><span><b class="num">${c}</b> contre</span><span><b class="num">${a}</b> ${termLink('abstention'+(a>1?'s':''),'abstention')}</span></div>
         ${barHTML(p,c,a)}
         <p>Seuls les députés présents votent : ${p+c+a} ont pris part à ce vote.</p>
-        ${v.k==='Motion de censure'?`<p class="note">Une ${termLink('motion de censure','motion-de-censure')} n'est adoptée que si elle réunit au moins 289 voix « pour », soit la ${termLink('majorité absolue','majorite-absolue')} des députés. Seules les voix « pour » sont comptées.</p>`:''}
+        ${v.k==='Motion de censure'?`<p class="note">Une ${termLink('motion de censure','motion-de-censure')} n'est adoptée que si elle recueille la ${termLink('majorité absolue','majorite-absolue')} des membres composant l'Assemblée${v.rq?` (${v.rq} voix pour ce vote)`:''}. Seules les voix « pour » sont comptées.</p>`:''}
       </section>
       <section class="ssec">
         <h2>De quoi s'agit-il ?</h2>

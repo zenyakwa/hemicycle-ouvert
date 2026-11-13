@@ -8,7 +8,7 @@ function registerView(name, el, render){ VIEWS[name]={el:typeof el==='string'?$(
 function normPath(p){
   p=String(p).split(/[?#]/)[0];
   try{ p=decodeURIComponent(p); }catch(e){}
-  p=p.toLowerCase().replace(/\/+$/,'');
+  p=p.toLowerCase().replace(/\/+$/,'').split('/').map(s=>s? slugG(s) : s).join('/');
   return p||'/';
 }
 function route(path){
@@ -43,10 +43,12 @@ function setMeta(meta, path){
   if(!c){ c=document.createElement('link'); c.rel='canonical'; document.head.appendChild(c); }
   c.href=url;
 }
-let curView=null;
+let curView=null, shownPath=null, shownMeta=null;
 function render(path, opts){
   opts=opts||{};
   const p=normPath(path);
+  // retour vers la vue déjà affichée derrière la fiche : on ferme la fiche sans reconstruire la vue
+  if(opts.pop && p===shownPath){ if(!overlay.hidden) closeDep({silent:true}); setMeta(shownMeta,p); return; }
   let r=route(p);
   // fiche député ouverte depuis le site : la vue en cours reste en fond
   if(r.view==='depute' && curView && curView!=='introuvable' && !opts.initial){
@@ -58,7 +60,7 @@ function render(path, opts){
   if(r.view!=='depute' && typeof closeDep==='function' && !overlay.hidden) closeDep({silent:true});
   Object.values(VIEWS).forEach(x=>{ if(x.el && x.el!==v.el) x.el.hidden=true; });
   v.el.hidden=false;
-  setMeta(meta, p);
+  setMeta(meta, p); shownPath=p; shownMeta=meta;
   document.querySelectorAll('.mainnav a').forEach(a=>{ if(a.dataset.nav===NAV[r.view]) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
   const hashEl = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if(hashEl && v.el.contains(hashEl)){ requestAnimationFrame(()=>{ hashEl.scrollIntoView({block:'start'}); hashEl.focus({preventScroll:true}); }); }
@@ -100,7 +102,7 @@ registerView('introuvable','#view-introuvable',()=>{
 registerView('votes','#view-votes',({cat})=>{
   if(cat && !CAT[cat]) return null;
   const c=cat||'all';
-  if(fCat!==c){ fCat=c; limit=20; }
+  if(fCat!==c){ fCat=c; limit=20; fRes='all'; document.querySelectorAll('#resSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r==='all')); }
   renderVotes();
   return cat? {title:'Les décisions : '+CAT[cat], description:`Les votes clés de l'Assemblée nationale sur le thème « ${CAT[cat]} ».`}
             : {title:'Les décisions', description:"Les votes clés de l'Assemblée nationale, classés par thème, avec le vote de chaque groupe."};

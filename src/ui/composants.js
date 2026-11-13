@@ -1,5 +1,5 @@
 /* ---------- Composants partagés ---------- */
-const slugG = s => norm(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const slugG = s => norm(String(s).replace(/œ/g,'oe').replace(/Œ/g,'Oe').replace(/æ/g,'ae')).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const groupPath = g => '/groupes/'+slugG(g.short);
 function searchDeps(q){
   q=norm(q.trim()); if(q.length<2) return null;
@@ -11,7 +11,7 @@ let CPDATA=null, cpPromise=null, COMMUNES=null;
 function loadCP(){
   if(!cpPromise) cpPromise=fetch('/cp.json').then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(j=>{ CPDATA=j; COMMUNES=[]; Object.entries(j).forEach(([cp,L])=>L.forEach(([nom,cs])=>COMMUNES.push({k:norm(nom), nom, cp, cs}))); return j; })
-    .catch(e=>{ console.warn('Codes postaux indisponibles :', e.message); return null; });
+    .catch(e=>{ console.warn('Codes postaux indisponibles :', e.message); cpPromise=null; return null; });
   return cpPromise;
 }
 const OUTREMER={ZA:'971',ZB:'972',ZC:'973',ZD:'974',ZM:'976',ZN:'988',ZP:'987',ZS:'975',ZW:'986',ZX:'977',ZZ:'099'};
@@ -26,7 +26,7 @@ function placeItems(list){ // [{nom, cs}] -> [{nom, code, d}]
 function searchAll(q, done){
   const t=q.trim();
   if(/^\d{5}$/.test(t)){
-    if(!CPDATA){ done({msg:'Recherche…'}); loadCP().then(j=>done(j? searchSync(t) : {msg:'Recherche par code postal momentanément indisponible. Essayez avec un nom ou un numéro de département.'})); return; }
+    if(!CPDATA){ done({msg:'Recherche…'}); loadCP().then(j=>j||loadCP()).then(j=>done(j? searchSync(t) : {msg:'Recherche par code postal momentanément indisponible. Essayez avec un nom ou un numéro de département.'})); return; }
     done(searchSync(t)); return;
   }
   done(searchSync(t));

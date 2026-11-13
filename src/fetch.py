@@ -145,6 +145,7 @@ def build_core(amo_zip, scr_zip):
                 "dos": dl.get("libelle"), "dr": dl.get("dossierRef"),
                 "so": s["sort"]["code"], "ty": s["typeVote"]["codeTypeVote"],
                 "sy": [int(dec["pour"]), int(dec["contre"]), int(dec["abstentions"])],
+                "rq": int(s["syntheseVote"]["nbrSuffragesRequis"]) if str(s["syntheseVote"].get("nbrSuffragesRequis") or "").isdigit() else None,
                 "gv": gv, "v": "".join(codes),
             })
     for i, d in enumerate(deps):

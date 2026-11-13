@@ -158,7 +158,7 @@ def build_transparence(out, TP, log=print):
 
 
 def build_logos(root):
-    """Logos présents dans logos/ et crédits lus dans logos/SOURCES.md : {sigle: [chemin, page Commons, licence]}."""
+    """Logos présents dans logos/ et crédits lus dans logos/SOURCES.md : {sigle: [chemin, page Commons, licence, auteur]}."""
     d=os.path.join(root,'logos'); out={}
     if not os.path.isdir(d): return out
     src={}
@@ -167,7 +167,7 @@ def build_logos(root):
         for line in open(sp,encoding='utf-8'):
             c=[x.strip() for x in line.strip().strip('|').split('|')]
             if len(c)==6 and c[0] and c[0]!='Sigle' and not c[0].startswith('-'):
-                m=re.search(r'\((https?://[^)]+)\)',c[3]); src[c[0]]=[m.group(1) if m else '',c[5]]
+                m=re.search(r'\((https?://[^)]+)\)',c[3]); src[c[0]]=[m.group(1) if m else '',c[5],c[4]]
     for f in sorted(os.listdir(d)):
         k,_,ext=f.rpartition('.')
         if ext in ('svg','png','webp') and k in src: out[k]=['/logos/'+f]+src[k]

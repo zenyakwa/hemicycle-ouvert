@@ -49,7 +49,7 @@ def test_page_de_vote(page_any, base_url):
 def test_motion_de_censure(page_desktop, base_url):
     p = page_desktop
     D, v = load(p, base_url, "[x for x in votes if x['k']=='Motion de censure'][0]")
-    expect(p.locator("#view-scrutin .resbox")).to_contain_text("289")
+    expect(p.locator("#view-scrutin .resbox")).to_contain_text("majorité absolue des membres composant")
 
 
 def test_mon_depute_a_vote(page_desktop, base_url):

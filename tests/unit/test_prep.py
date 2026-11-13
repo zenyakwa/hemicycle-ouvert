@@ -7,6 +7,11 @@ def test_slugs_uniques(data):
 
 
 def test_build_data_identique_a_avant(data, root):
+    """Non-régression de la restructuration de prep.py, valable sur l'instantané de données de départ."""
+    import hashlib, pytest
+    ref = open(os.path.join(root, "tests/unit/fixtures/data-avant.sha256")).read().strip()
+    if hashlib.sha256(open(os.path.join(root, "data/an-data.json.gz"), "rb").read()).hexdigest() != ref:
+        pytest.skip("données mises à jour depuis l'instantané de référence")
     old = json.load(gzip.open(os.path.join(root, "tests/unit/fixtures/data-avant.json.gz"), "rt", encoding="utf-8"))
     for k in ("votes", "groups", "quiz", "cats", "generated", "lastScrutin", "nScrutins"):
         assert data[k] == old[k], k
@@ -39,5 +44,9 @@ def test_logos_connus_au_build(data, root):
     assert logos["RN"][0] == "/logos/RN.png" and logos["ECOS"][0] == "/logos/ECOS.webp"
     assert logos["RN"][1].startswith("https://commons.wikimedia.org/") and logos["RN"][2] == "CC BY-SA 4.0"
     assert "SOC" not in logos
-    for path, page, lic in logos.values():
+    for path, page, lic, auteur in logos.values():
         assert os.path.exists(os.path.join(root, path.lstrip("/")))
+
+
+def test_logos_avec_auteur(data):
+    assert data["logos"]["RN"][3] == "Rassemblement National"

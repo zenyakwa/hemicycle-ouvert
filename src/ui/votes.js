@@ -1,5 +1,5 @@
 /* ---------- Votes ---------- */
-let fCat='all', fRes='adopté', fKind='', fQ='', limit=20;
+let fCat='all', fRes='all', fKind='', fQ='', limit=20;
 function filtered(){
   const q=norm(fQ);
   return votes.filter(v=> (fCat==='all'||v.cat===fCat) && (fRes==='all'||v.so===fRes) && (!fKind||v.k===fKind) && (!q || norm(v.t+' '+(v.dos||'')).includes(q)));
