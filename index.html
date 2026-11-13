@@ -339,6 +339,30 @@ a.vcard.vlink:hover{border-color:var(--accent)}
 .btn.mobile-only{display:none}
 @media (max-width:760px){.btn.mobile-only{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:14px;text-decoration:none;width:100%}}
 .block.play{border-top:1px dashed var(--line);padding-top:18px}
+/* navigation principale : icônes ; barre fixe en bas sur mobile */
+.mainnav svg{width:18px;height:18px;flex:none}
+@media (max-width:760px){
+  body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  .mainnav{position:fixed;z-index:60;left:0;right:0;bottom:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--surface);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(16,26,46,.08)}
+  .mainnav a{flex-direction:column;justify-content:center;gap:2px;min-height:56px;border:0;border-radius:10px;background:none;padding:4px 2px;font-size:11.5px;font-weight:600;text-align:center;line-height:1.15}
+  .mainnav a svg{width:22px;height:22px}
+  .mainnav a[aria-current="page"]{background:var(--surface-2);color:var(--accent);border:0}
+  .overlay{padding-bottom:0}
+  .brand-sub,.fresh{display:none}
+  header.top{padding-bottom:10px}
+  .brand-title{font-size:30px}
+  .brand{display:flex;align-items:center;min-height:44px}
+}
+
+/* cibles tactiles d'au moins 44 × 44 px sur écran tactile ou étroit */
+@media (max-width:760px), (pointer:coarse){
+  .cat,.chip,.back,.more,.lnk,select,.seg button,.qz-nav button,.next,.themechips a,.gbar-legend a,.btn{min-height:44px}
+  .sh-close{width:44px;height:44px}
+  .gv .t a,.dvote a,.trow a,.gp-top .full a{display:inline-block;padding-block:12px;margin-block:-12px}
+  .ib{width:44px;height:44px;margin:-12px -10px -12px -4px;border:0;background:none;position:relative;isolation:isolate;color:var(--muted)}
+  .ib::before{content:"";position:absolute;inset:11px;border:1.5px solid currentColor;border-radius:50%;background:var(--surface);z-index:-1}
+  .ib:hover,.ib:focus-visible,.ib[aria-expanded="true"]{background:none;color:var(--accent)}
+}
 </style>
 </head>
 <body>
@@ -354,10 +378,10 @@ a.vcard.vlink:hover{border-color:var(--accent)}
   </header>
 
   <nav class="mainnav" aria-label="Navigation principale">
-    <a href="/depute" data-nav="depute">Mon député</a>
-    <a href="/votes" data-nav="votes">Les décisions</a>
-    <a href="/comprendre" data-nav="comprendre">Comprendre</a>
-    <a href="/jouer" data-nav="jouer">Jouer</a>
+    <a href="/depute" data-nav="depute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span>Mon député</span></a>
+    <a href="/votes" data-nav="votes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 12 3 3 5-6"/></svg><span>Les décisions</span></a>
+    <a href="/comprendre" data-nav="comprendre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20a9 9 0 0 1 18 0"/><path d="M7 20a5 5 0 0 1 10 0"/><path d="M12 20v0"/></svg><span>Comprendre</span></a>
+    <a href="/jouer" data-nav="jouer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 11v3M6.5 12.5h3"/><circle cx="15.5" cy="12" r=".8" fill="currentColor"/><circle cx="17.5" cy="14" r=".8" fill="currentColor"/></svg><span>Jouer</span></a>
   </nav>
 
   <main id="main">
@@ -386,7 +410,7 @@ a.vcard.vlink:hover{border-color:var(--accent)}
       <section class="block" aria-labelledby="hGlance">
         <div class="block-h"><h2 id="hGlance">L'Assemblée en un coup d'œil</h2></div>
         <div id="homeGroups"></div>
-        <a class="btn mobile-only" href="/depute">Voir les <span class="ndeps"></span> députés en liste</a>
+        <a class="btn mobile-only" href="/depute"><span>Voir les <span class="ndeps"></span> députés en liste</span></a>
       </section>
       <section class="block play" aria-labelledby="hPlay">
         <div class="block-h"><h2 id="hPlay">Jouer</h2><p>Pour tester ses connaissances, à partir des vrais votes.</p></div>
@@ -707,6 +731,9 @@ function bindSeats(svg){
 }
 bindSeats(hemi);
 
+
+const TOUCH = matchMedia('(hover: none)').matches;
+if(TOUCH) $('#hemiHint').textContent = "Touchez un siège pour ouvrir la fiche du député. Les groupes sont placés de gauche à droite comme dans l'hémicycle.";
 /* ---------- Legend & groups ---------- */
 let selGroup=null;
 function renderLegend(){

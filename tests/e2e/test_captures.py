@@ -13,6 +13,7 @@ VUES = [("accueil", "/"), ("fiche", "/depute/antoine-golliot"), ("decisions-sant
 @pytest.mark.parametrize("nom,path", VUES)
 def test_captures_etape(page_any, base_url, nom, path):
     page_any.goto(base_url + path)
-    page_any.wait_for_load_state("networkidle")
+    page_any.wait_for_load_state("load")
+    page_any.evaluate("document.fonts.ready.then(()=>1)")
     page_any.wait_for_timeout(300)
     capture(page_any, ETAPE, nom, full=nom not in ("fiche", "mon-depute"))

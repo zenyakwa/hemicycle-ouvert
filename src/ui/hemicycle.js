@@ -40,3 +40,6 @@ function bindSeats(svg){
 }
 bindSeats(hemi);
 
+
+const TOUCH = matchMedia('(hover: none)').matches;
+if(TOUCH) $('#hemiHint').textContent = "Touchez un siège pour ouvrir la fiche du député. Les groupes sont placés de gauche à droite comme dans l'hémicycle.";
