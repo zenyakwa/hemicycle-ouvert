@@ -140,7 +140,7 @@ Pour chacun des scrutins clés (330 aujourd'hui) :
 - Fil d'Ariane : Les décisions › Thème (lien `/votes/<thème>`).
 - Date · type de texte · lecture (le type et la lecture renvoient au lexique).
 - Titre.
-- Encadré résultat : ADOPTÉ / REJETÉ en grand, chiffres pour/contre/abstention, barre, phrase « Seuls les députés présents votent : N ont pris part à ce vote. » (N = pour + contre + abstentions ; « ont pris part » = votants exprimés et abstentionnistes, définition dans le lexique). Pour les motions de censure : rappel factuel que seules les voix « pour » sont comptées et que 289 sont nécessaires.
+- Encadré résultat : ADOPTÉ / REJETÉ en grand, chiffres pour/contre/abstention, barre, phrase « N députés ont pris part à ce vote (pour, contre ou abstention). » (formulation modifiée le 13/11 : un député absent peut voter par délégation) (N = pour + contre + abstentions ; « ont pris part » = votants exprimés et abstentionnistes, définition dans le lexique). Pour les motions de censure : rappel factuel que seules les voix « pour » sont comptées et que 289 sont nécessaires.
 - « De quoi s'agit-il ? » : résumé « En bref » (ou « Résumé à venir » + lien vers le texte officiel), auteur, promulgation éventuelle, puis la définition d'un mot-clé du vote (type de texte ou lecture) avec un lien « Voir le lexique ».
 - « Comment chaque groupe a voté » : une ligne par groupe dans l'ordre de l'hémicycle : pastille de couleur, sigle, nom complet, position majoritaire en couleur (Pour/Contre/Abstention), mini-barre, chiffres pour/contre/abst.
 - L'hémicycle du vote (existant), avec en dessous une **liste équivalente** accessible (repliable).

@@ -25,7 +25,8 @@ def test_page_de_vote(page_any, base_url):
     expect(box.locator(".big")).to_have_text("ADOPTÉ" if v["so"] == "adopté" else "REJETÉ")
     for n in v["sy"]:
         expect(box).to_contain_text(str(n))
-    expect(box).to_contain_text("Seuls les députés présents votent : %d ont pris part à ce vote." % sum(v["sy"]))
+    expect(box).to_contain_text("%d députés ont pris part à ce vote (pour, contre ou abstention)." % sum(v["sy"]))
+    assert "Seuls les députés présents" not in box.inner_text()
     expect(page.get_by_role("heading", name="De quoi s'agit-il ?")).to_be_visible()
     expect(page.get_by_role("heading", name="Comment chaque groupe a voté")).to_be_visible()
     rows = page.locator(".grow")
