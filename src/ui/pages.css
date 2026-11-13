@@ -23,3 +23,4 @@
 .playcard:hover{border-color:var(--accent)}
 .pc-t{font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase}
 .pc-d{color:var(--muted)}
+.res-vacant{display:flex;gap:10px;align-items:center;padding:8px 12px;min-height:44px;color:var(--muted)}

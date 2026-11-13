@@ -68,12 +68,9 @@ function renderScrutin(v){
   const svg=$('#vhemi'), idx=votes.indexOf(v);
   drawHemi(svg, d=>{ const x=v.v[d.i]; return x==='p'?'var(--pour)':x==='c'?'var(--contre)':x==='a'?'var(--abst)':'var(--absent)'; });
   svg.dataset.vote=idx; bindSeats(svg);
-  const inp=$('#qVote'), res=$('#qVote-results');
-  inp.addEventListener('input',()=>{ const hits=searchDeps(inp.value); if(!hits){ res.hidden=true; return; }
-    res.innerHTML = hits.length? hits.slice(0,40).map(d=>`<button type="button" data-dep="${d.i}">${avatar(d)}<span><b>${esc(d.p+' '+d.n)}</b><br><small>${esc(G[d.g]?.short||'')} · ${esc(circo(d))}</small></span></button>`).join('') : '<div class="note" style="padding:12px">Aucun député ne correspond.</div>';
-    res.hidden=false; });
-  res.addEventListener('click',e=>{ const b=e.target.closest('[data-dep]'); if(!b) return; const d=deps[+b.dataset.dep]; res.hidden=true; inp.value='';
-    $('#myVote').innerHTML=`<p class="myvote"><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>(${esc(G[d.g]?.short||'')} · ${esc(circo(d))})</small><br><span class="pos ${({p:'p',c:'c',a:'a'})[v.dt<d.d?'':v.v[d.i]]||'x'}">${esc(depVoteText(v,d))}</span></p>`; });
+  bindSearch('qVote',{asButton:true, onPick:d=>{
+    $('#myVote').innerHTML=`<p class="myvote"><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>(${esc(G[d.g]?.short||'')} · ${esc(circo(d))})</small><br><span class="pos ${({p:'p',c:'c',a:'a'})[v.dt<d.d?'':v.v[d.i]]||'x'}">${esc(depVoteText(v,d))}</span></p>`; }});
+  $('#qVote').placeholder='Nom, ville ou code postal';
   $('#copyLink').addEventListener('click',async()=>{
     const url=location.origin+'/scrutin/'+v.n, m=$('#copyMsg');
     let ok=false;
