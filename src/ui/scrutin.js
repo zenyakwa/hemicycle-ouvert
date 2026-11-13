@@ -12,7 +12,8 @@ function voteListHTML(v){
   const cat={p:[],c:[],a:[],x:[],y:[]};
   deps.forEach(d=>{ const k = v.dt<d.d? 'y' : ({p:'p',c:'c',a:'a'})[v.v[d.i]]||'x'; cat[k].push(d); });
   const T={p:'Pour',c:'Contre',a:'Abstention',x:"N'a pas pris part au vote",y:'Pas encore député à cette date'};
-  return Object.keys(T).filter(k=>cat[k].length).map(k=>`<section><h3>${T[k]} (${cat[k].length})</h3><ul>${cat[k].sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${esc(G[d.g]?.short||'')}</small></li>`).join('')}</ul></section>`).join('');
+  const diff = cat.p.length!==v.sy[0] || cat.c.length!==v.sy[1] || cat.a.length!==v.sy[2];
+  return (diff?'<p class="note">Liste des députés actuellement en exercice : les totaux peuvent différer du résultat officiel, qui compte aussi les députés ayant quitté l\'Assemblée depuis ce vote.</p>':'')+Object.keys(T).filter(k=>cat[k].length).map(k=>`<section><h3>${T[k]} (${cat[k].length})</h3><ul>${cat[k].sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${esc(G[d.g]?.short||'')}</small></li>`).join('')}</ul></section>`).join('');
 }
 let curScrutin=null;
 function renderScrutin(v){
