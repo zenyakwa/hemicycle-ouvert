@@ -3,6 +3,7 @@
 .superpowers
 .captures
 data
+!data/cp.json
 docs
 src
 tests

@@ -127,7 +127,7 @@ Un seul composant, réutilisé (accueil, `/depute`, page introuvable, page de vo
   - commune absente du fichier des bureaux (commune nouvelle créée depuis 2022) : on utilise les anciennes communes si La Poste les liste encore, sinon on propose toutes les circonscriptions du département.
 - Format compact (`data/cp.json`, servi en `/cp.json`) : `{ "<cp>": [["Nom commune", ["2401","2404"]], …], … }`. Le code circonscription `DDNN` (`2A01`, `9741`…) est relié au député par `nd` + `ci` dans les données AN ; le constructeur vérifie la correspondance pour la Corse, l'outre-mer (971–976, 986–988) et les Français de l'étranger (99, sans code postal).
 - Rafraîchissement : téléchargé par `fetch.py` à chaque passage. En cas d'échec réseau, on garde le fichier existant et la mise à jour nocturne **ne doit pas échouer** pour autant (journal d'avertissement seulement).
-- Tests : 24200 → 8 communes, 1re et 4e circonscriptions de la Dordogne ; 75011 → 6e et 7e de Paris ; une grande ville hors PLM (31000 Toulouse) → plusieurs choix ; couverture ≥ 99 % des codes postaux de métropole et des DROM ; chaque circonscription de la table correspond à un siège connu (député ou vacant).
+- Tests : 24200 → 8 communes, toutes dans la 4e circonscription de la Dordogne (correction du 13/11 : pas de 1re circonscription) ; 75011 → 6e et 7e de Paris ; une grande ville hors PLM (31000 Toulouse) → plusieurs choix ; couverture ≥ 99 % des codes postaux de métropole et des DROM ; chaque circonscription de la table correspond à un siège connu (député ou vacant).
 
 ### 5.7 Les décisions (`/votes`, `/votes/<thème>`)
 

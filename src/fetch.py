@@ -304,6 +304,26 @@ def update_deports(core):
     return cache
 
 
+def update_cp(path, min_codes=5000):
+    """Table code postal -> circonscriptions (data/cp.json). Ne fait jamais échouer la mise à jour :
+    en cas de problème, on garde la table précédente et on renvoie False."""
+    import cp
+    try:
+        table = cp.build_table(cp.parse_laposte(cp.download(cp.LAPOSTE_URL)),
+                               cp.parse_bureaux(cp.download(cp.bureaux_url())))
+        if len(table) < min_codes:
+            raise ValueError("table incomplète (%d codes postaux)" % len(table))
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(table, f, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+        os.replace(tmp, path)
+        log("  %d codes postaux" % len(table))
+        return True
+    except Exception as e:
+        log("  codes postaux indisponibles (%s) — on garde la table précédente" % e)
+        return False
+
+
 def main():
     log("Téléchargement des députés et des scrutins…")
     core, scr = build_core(get(URLS["amo"]), get(URLS["scr"]))
@@ -350,6 +370,10 @@ def main():
         log("  %d déports enregistrés" % len(dep["deports"]))
     except Exception as e:
         log("  registre des déports indisponible (%s) — on garde les données précédentes" % e)
+
+    log("Codes postaux et circonscriptions…")
+    if not LOCAL:
+        update_cp(P("data", "cp.json"))
 
     with gzip.open(P("data", "an-data.json.gz"), "wt", encoding="utf-8") as f:
         json.dump(core, f, ensure_ascii=False, separators=(",", ":"))

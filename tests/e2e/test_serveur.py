@@ -38,3 +38,10 @@ def test_logos_presents_et_caches(base_url):
         s, h, _ = get(base_url, "/logos/" + f)
         assert s == 200, f
         assert "max-age=604800" in h.get("cache-control", ""), f
+
+
+def test_cp_json(base_url):
+    s, h, body = get(base_url, "/cp.json", gzip=True)
+    assert s == 200 and h["content-type"].startswith("application/json")
+    assert "max-age=3600" in h.get("cache-control", "")
+    assert h.get("content-encoding") == "gzip"
