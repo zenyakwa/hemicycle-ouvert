@@ -1,7 +1,10 @@
-import gzip,json,re,collections,os
-ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-P=lambda *a: os.path.join(ROOT,*a)
-d=json.load(gzip.open(P('data','an-data.json.gz')))
+import gzip,json,re,collections,os,sys,importlib.util
+SRC=os.path.dirname(os.path.abspath(__file__))
+ROOT=os.path.dirname(SRC)
+sys.path.insert(0,SRC)
+from slug import assign_slugs
+def _load(name,path):
+    spec=importlib.util.spec_from_file_location(name,path); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 CATS=[
 ("censure","Censure",["motion de censure"]),
 ("societe0",None,None),
@@ -36,40 +39,11 @@ def kind(v):
     if 'projet de loi' in t: return 'Projet de loi'
     if 'proposition de loi' in t: return 'Proposition de loi'
     return 'Autre'
-for v in d['votes']:
-    v['cat']=cat(v); v['k']=kind(v)
-    m=re.search(r'\(([^()]*(lecture|paritaire|définitive)[^()]*)\)',v['t']); v['lec']=m.group(1) if m else None
-print(collections.Counter(v['cat'] for v in d['votes']))
-for v in d['votes']:
-    if v['cat']=='autres': print('AUTRE',v['t'][:140])
-gid={g['id']:g for g in d['groups']}
-# loyalty & key participation
-for i,dep in enumerate(d['deputes']):
-    same=tot=kp=ke=0
-    for v in d['votes']:
-        if v['dt']<dep['d']: continue
-        ke+=1; c=v['v'][i]
-        if c not in 'pca': continue
-        kp+=1
-        gm=next((g for g in v['gv'] if g[0]==dep['g']),None)
-        if gm and gm[1] in ('pour','contre','abstention'):
-            tot+=1; same+= ({'p':'pour','c':'contre','a':'abstention'}[c]==gm[1])
-    dep['loy']=round(100*same/tot) if tot else None; dep['kp']=kp; dep['ke']=ke
-json.dump({'cats':[[k,l] for k,l,_ in CATS if l]+[['autres','Autres sujets']],**d},open(P('data','data.json'),'w'),ensure_ascii=False,separators=(',',':'))
-print(collections.Counter(v['k'] for v in d['votes']))
-print(set(g[1] for v in d['votes'] for g in v['gv']))
 
-# ---- résumés des textes ----
-import importlib.util,os
-spec=importlib.util.spec_from_file_location('res',os.path.join(os.path.dirname(os.path.abspath(__file__)),'resumes.py')); res=importlib.util.module_from_spec(spec); spec.loader.exec_module(res)
-X=json.load(open(P('data','an-dossiers.json')))
-num2k={n:k for k,ns in X['map'].items() for n in ns}
-out=json.load(open(P('data','data.json')))
 def clean_aut(a):
     if not a: return None
     a=re.sub(r'^(MM\.|Mmes|M\.|Mme)\s+','',a).strip(' ,')
     return a
-dos={}
 def auto_resume(expo):
     """Extrait automatique : la phrase de l'exposé des motifs qui annonce l'objet du texte."""
     if not expo: return None
@@ -86,59 +60,121 @@ def auto_resume(expo):
     if len(pick)>280:
         pick=pick[:280].rsplit(' ',1)[0].rstrip(',;:')+'…'
     return pick
-# drapeau source : 0 = rédigé d'après l'intitulé, 1 = rédigé d'après l'exposé des motifs, 2 = extrait automatique
-for k in X.get('map',{}):
-    v=X['dos'].get(k) or {}
-    if k in res.R:
-        dos[k]=[res.R[k], clean_aut(v.get('auteur')), v.get('promu'), 1 if v.get('expo') else 0]
-    else:
-        a=auto_resume(v.get('expo'))
-        if a or v.get('auteur') or v.get('promu'):
-            dos[k]=[a, clean_aut(v.get('auteur')), v.get('promu'), 2]
-for v in out['votes']:
-    k=num2k.get(v['n'])
-    if k in dos: v['dk']=k
-out['dos']=dos
-# ---- questionnaire « Trouve ton groupe » ----
-spec2=importlib.util.spec_from_file_location('quiz',P('src','quiz.py')); qz=importlib.util.module_from_spec(spec2); spec2.loader.exec_module(qz)
-byn={v['n']:v for v in out['votes']}
-quiz=[]
-for item in qz.QUIZ:
-    n,q,th=item[:3]; fixed=item[3] if len(item)>3 else None
-    v=byn.get(n)
-    if not v: print('quiz : scrutin',n,'introuvable, question ignorée'); continue
-    k=v.get('dk'); info=X['dos'].get(k) or {}
-    flat=re.sub(r'\s+',' ',info.get('expo') or '')
-    if fixed and re.sub(r'\s+',' ',fixed) in flat: quote=fixed
-    else:
-        if fixed: print('quiz : citation introuvable dans l\'exposé du scrutin',n,'— extrait automatique utilisé')
-        quote=auto_resume(info.get('expo'))
-    if v['k']=='Projet de loi': src='Exposé des motifs du projet de loi (Gouvernement)'
-    elif info.get('auteur'): src='Exposé des motifs, texte déposé par '+clean_aut(info['auteur'])
-    else: src='Exposé des motifs du texte'
-    quiz.append({'n':n,'q':q,'th':th,'qt':quote,'qs':src if quote else None})
-out['quiz']=quiz
-print('quiz',len(quiz),'questions,',sum(1 for x in quiz if x['qt']),'avec citation')
-# ---- transparence : HATVP, déports, arrivée au siège ----
-TP=P('data','an-transparence.json')
-dep_by={}
-if os.path.exists(TP):
-    for k,v in sorted(json.load(open(TP,encoding='utf-8'))['deports'].items(), reverse=True):
-        dep_by.setdefault(v['pa'],[]).append([v['date'],v['cible'],v['portee'],v.get('motif','')])
-for d in out['deputes']:
-    h=d.pop('hatvp',None)
-    if h and 'pages_nominatives/' in h: d['hv']=h.split('pages_nominatives/')[1]
-    if d['id'] in dep_by: d['dp']=dep_by[d['id']]
-    if not d.get('cm'): d.pop('cm',None)
-print('déports', sum(len(v) for v in dep_by.values()))
-json.dump(out,open(P('data','data.json'),'w'),ensure_ascii=False,separators=(',',':'))
-print('résumés',len(dos),'votes avec résumé',sum(1 for v in out['votes'] if v.get('dk')))
 
-# ---- construit index.html ----
-t=open(P('src','template.html'),encoding='utf-8').read()
-d=open(P('data','data.json'),encoding='utf-8').read().replace('</','<\\/')
-body=t.replace('__DATA__',d)
-i=body.index('</style>')+len('</style>')
-HEAD=open(P('src','head.html'),encoding='utf-8').read()
-open(P('index.html'),'w',encoding='utf-8').write(HEAD+body[:i]+'\n</head>\n<body>\n'+body[i:]+'\n</body>\n</html>\n')
-print('index.html regénéré')
+
+def classify_votes(d, log=print):
+    for v in d['votes']:
+        v['cat']=cat(v); v['k']=kind(v)
+        m=re.search(r'\(([^()]*(lecture|paritaire|définitive)[^()]*)\)',v['t']); v['lec']=m.group(1) if m else None
+    log(collections.Counter(v['cat'] for v in d['votes']))
+    for v in d['votes']:
+        if v['cat']=='autres': log('AUTRE',v['t'][:140])
+
+
+def loyalty(d):
+    """Vote avec son groupe (part des votes clés où le député a voté comme la majorité de son groupe) et présence aux votes clés."""
+    for i,dep in enumerate(d['deputes']):
+        same=tot=kp=ke=0
+        for v in d['votes']:
+            if v['dt']<dep['d']: continue
+            ke+=1; c=v['v'][i]
+            if c not in 'pca': continue
+            kp+=1
+            gm=next((g for g in v['gv'] if g[0]==dep['g']),None)
+            if gm and gm[1] in ('pour','contre','abstention'):
+                tot+=1; same+= ({'p':'pour','c':'contre','a':'abstention'}[c]==gm[1])
+        dep['loy']=round(100*same/tot) if tot else None; dep['kp']=kp; dep['ke']=ke
+
+
+def build_resumes(out, X, res):
+    num2k={n:k for k,ns in X['map'].items() for n in ns}
+    dos={}
+    # drapeau source : 0 = rédigé d'après l'intitulé, 1 = rédigé d'après l'exposé des motifs, 2 = extrait automatique
+    for k in X.get('map',{}):
+        v=X['dos'].get(k) or {}
+        if k in res.R:
+            dos[k]=[res.R[k], clean_aut(v.get('auteur')), v.get('promu'), 1 if v.get('expo') else 0]
+        else:
+            a=auto_resume(v.get('expo'))
+            if a or v.get('auteur') or v.get('promu'):
+                dos[k]=[a, clean_aut(v.get('auteur')), v.get('promu'), 2]
+    for v in out['votes']:
+        k=num2k.get(v['n'])
+        if k in dos: v['dk']=k
+    out['dos']=dos
+
+
+def build_quiz(out, X, qz, log=print):
+    byn={v['n']:v for v in out['votes']}
+    quiz=[]
+    for item in qz.QUIZ:
+        n,q,th=item[:3]; fixed=item[3] if len(item)>3 else None
+        v=byn.get(n)
+        if not v: log('quiz : scrutin',n,'introuvable, question ignorée'); continue
+        k=v.get('dk'); info=X['dos'].get(k) or {}
+        flat=re.sub(r'\s+',' ',info.get('expo') or '')
+        if fixed and re.sub(r'\s+',' ',fixed) in flat: quote=fixed
+        else:
+            if fixed: log('quiz : citation introuvable dans l\'exposé du scrutin',n,'— extrait automatique utilisé')
+            quote=auto_resume(info.get('expo'))
+        if v['k']=='Projet de loi': src='Exposé des motifs du projet de loi (Gouvernement)'
+        elif info.get('auteur'): src='Exposé des motifs, texte déposé par '+clean_aut(info['auteur'])
+        else: src='Exposé des motifs du texte'
+        quiz.append({'n':n,'q':q,'th':th,'qt':quote,'qs':src if quote else None})
+    out['quiz']=quiz
+    log('quiz',len(quiz),'questions,',sum(1 for x in quiz if x['qt']),'avec citation')
+
+
+def build_transparence(out, TP, log=print):
+    dep_by={}
+    if os.path.exists(TP):
+        for k,v in sorted(json.load(open(TP,encoding='utf-8'))['deports'].items(), reverse=True):
+            dep_by.setdefault(v['pa'],[]).append([v['date'],v['cible'],v['portee'],v.get('motif','')])
+    for d in out['deputes']:
+        h=d.pop('hatvp',None)
+        if h and 'pages_nominatives/' in h: d['hv']=h.split('pages_nominatives/')[1]
+        if d['id'] in dep_by: d['dp']=dep_by[d['id']]
+        if not d.get('cm'): d.pop('cm',None)
+    log('déports', sum(len(v) for v in dep_by.values()))
+
+
+def build_data(root=ROOT, log=lambda *a: None):
+    """Construit le dictionnaire des données du site (sans rien écrire sur le disque)."""
+    P=lambda *a: os.path.join(root,*a)
+    d=json.load(gzip.open(P('data','an-data.json.gz'),'rt',encoding='utf-8'))
+    classify_votes(d, log)
+    loyalty(d)
+    out={'cats':[[k,l] for k,l,_ in CATS if l]+[['autres','Autres sujets']],**d}
+    log(collections.Counter(v['k'] for v in d['votes']))
+    log(set(g[1] for v in d['votes'] for g in v['gv']))
+    X=json.load(open(P('data','an-dossiers.json'),encoding='utf-8'))
+    build_resumes(out, X, _load('res',P('src','resumes.py')))
+    build_quiz(out, X, _load('quiz',P('src','quiz.py')), log)
+    build_transparence(out, P('data','an-transparence.json'), log)
+    assign_slugs(out['deputes'])
+    log('résumés',len(out['dos']),'votes avec résumé',sum(1 for v in out['votes'] if v.get('dk')))
+    return out
+
+
+def data_json(data):
+    return json.dumps(data,ensure_ascii=False,separators=(',',':'))
+
+
+def render_index(data, root=ROOT):
+    P=lambda *a: os.path.join(root,*a)
+    t=open(P('src','template.html'),encoding='utf-8').read()
+    body=t.replace('__DATA__',data_json(data).replace('</','<\\/'))
+    i=body.index('</style>')+len('</style>')
+    HEAD=open(P('src','head.html'),encoding='utf-8').read()
+    return HEAD+body[:i]+'\n</head>\n<body>\n'+body[i:]+'\n</body>\n</html>\n'
+
+
+def main():
+    data=build_data(ROOT, print)
+    with open(os.path.join(ROOT,'data','data.json'),'w',encoding='utf-8') as f: f.write(data_json(data))
+    with open(os.path.join(ROOT,'index.html'),'w',encoding='utf-8') as f: f.write(render_index(data))
+    print('index.html regénéré')
+
+
+if __name__=='__main__':
+    main()
