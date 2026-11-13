@@ -1,0 +1,42 @@
+/* pages : en-têtes de vue, grande recherche, listes */
+.view>h1:focus,.view h1:focus{outline:none}
+.pagehead{padding:8px 0 18px}
+.pagehead h1{font-family:var(--display);font-weight:800;font-size:clamp(32px,5.4vw,52px);line-height:.95;text-transform:uppercase;letter-spacing:.01em;margin:0 0 10px;text-wrap:balance}
+.pagehead .lead{margin:0 0 16px;color:var(--muted);max-width:62ch}
+.pagehead .lead b{color:var(--ink)}
+.biglabel{display:block;font-weight:700;font-size:15px;margin:0 0 6px}
+.search-big{max-width:640px}
+.search-big input{padding:14px 14px 14px 42px;font-size:17px;border-radius:12px;background:var(--surface)}
+.search-big svg{left:14px;width:18px;height:18px}
+.pagehead .sub{margin:10px 0 0;color:var(--muted);font-size:14px}
+.results a{display:flex;gap:10px;align-items:center;width:100%;text-decoration:none;padding:8px 12px;min-height:44px}
+.results a:hover,.results a:focus{background:var(--surface-2)}
+.deplist{columns:3 260px;column-gap:28px}
+.dgrp{break-inside:avoid;margin:0 0 16px}
+.dgrp h3{font-size:14px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.06em}
+.dgrp ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.dgrp li{font-size:14px}
+.dgrp li a{font-weight:600}
+.dgrp small{color:var(--muted)}
+.playcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.playcard{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:14px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);text-decoration:none}
+.playcard:hover{border-color:var(--accent)}
+.pc-t{font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase}
+.pc-d{color:var(--muted)}
+.res-vacant{display:flex;gap:10px;align-items:center;padding:8px 12px;min-height:44px;color:var(--muted)}
+.lexlist{margin:0;display:grid;gap:10px;max-width:820px}
+.lexitem{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.lexitem dt{font-weight:800;font-size:16px;scroll-margin-top:16px}
+.lexitem dt:focus{outline:none}
+.lexitem dt:target,.lexitem:has(dt:focus){border-color:var(--accent)}
+.lexitem dd{margin:4px 0 0;color:var(--ink)}
+a.lex{text-decoration:underline dotted;text-underline-offset:3px}
+#hemiListBtn{margin-top:10px}
+.hemilist,.votelist{margin-top:12px;columns:2 300px;column-gap:28px}
+.votelist{columns:auto;display:block}
+.votelist summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.votelist[open]{columns:2 300px}
+.hemilist section,.votelist section{break-inside:avoid;margin-bottom:14px}
+.hemilist h3,.votelist h3{font-size:14px;margin:0 0 4px}
+.hemilist ul,.votelist ul{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:14px}
+.hemilist small,.votelist small{color:var(--muted)}

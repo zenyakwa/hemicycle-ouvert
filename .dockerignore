@@ -1,6 +1,11 @@
 .git
 .github
+.superpowers
+.captures
 data
+!data/cp.json
+docs
 src
+tests
 updater
 README.md
