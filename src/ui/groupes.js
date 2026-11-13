@@ -26,11 +26,11 @@ function renderOverview(){
       <span class="ab">${esc(g.short)}</span>
       <span class="ln">${esc(g.l)}</span>
       <span class="meter" title="${g.n} sièges"><i style="width:${(100*g.n/122).toFixed(1)}%;background:${g.col}"></i></span>
-      <span class="row"><span><b>${g.n}</b> sièges</span><span>cohésion <b>${g.loy} %</b></span></span>
+      <span class="row"><span><b>${g.n}</b> sièges</span><span>vote avec son groupe <b>${g.loy} %</b></span></span>
       <span class="row"><span>femmes <b>${g.fem} %</b></span><span>âge moyen <b>${g.age}</b></span></span>
     </button>`).join('')}
   </div>
-  <p class="hint" style="margin-top:10px">Cohésion : part des votes clés où le député a voté comme la majorité de son groupe.</p>`;
+  <p class="hint" style="margin-top:10px">${termLink('Vote avec son groupe','vote-avec-son-groupe')} : ${esc(lexDef('vote-avec-son-groupe'))}</p>`;
 }
 $('#groupsArea').addEventListener('click',e=>{
   const g=e.target.closest('.gcard'); if(g){ navigate(groupPath(G[g.dataset.g])); return; }
@@ -53,7 +53,7 @@ function renderGroup(g){
     </div>
     <div class="stats">
       <div class="stat"><div class="v num">${g.n}</div><div class="k">sièges sur 577</div></div>
-      <div class="stat"><div class="v">${g.loy} %</div><div class="k">cohésion des votes</div></div>
+      <div class="stat"><div class="v">${g.loy} %</div><div class="k">vote avec son groupe</div></div>
       <div class="stat"><div class="v">${g.part} %</div><div class="k">participation moy. <span style="text-transform:none">(AN : ${avgPart} %)</span></div></div>
       <div class="stat"><div class="v">${g.fem} %</div><div class="k">de femmes</div></div>
       <div class="stat"><div class="v">${g.age} ans</div><div class="k">âge moyen</div></div>
@@ -68,7 +68,7 @@ function renderGroup(g){
         <div class="toolbar" style="justify-content:space-between;margin-bottom:10px">
           <h2 style="font-family:var(--display);font-weight:800;font-size:20px;margin:0;text-transform:uppercase">Les ${g.n} membres</h2>
           <div class="seg" role="group" aria-label="Trier">
-            ${[['nom','Nom'],['dep','Département'],['part','Participation'],['loy','Fidélité']].map(([k,l])=>`<button data-sort="${k}" aria-pressed="${memberSort===k}">${l}</button>`).join('')}
+            ${[['nom','Nom'],['dep','Département'],['part','Participation'],['loy','Vote avec son groupe']].map(([k,l])=>`<button data-sort="${k}" aria-pressed="${memberSort===k}">${l}</button>`).join('')}
           </div>
         </div>
         <div class="members">${m.map(d=>`
@@ -76,7 +76,7 @@ function renderGroup(g){
             <span class="who"><span class="nm" style="display:block">${esc(d.p+' '+d.n)}</span><span class="pl" style="display:block">${esc(d.dep)} (${esc(d.nd)})</span></span>
             <span class="sc">${memberSort==='loy'?(d.loy??'–')+' %':Math.round(100*d.part/Math.max(1,d.elig))+' %'}</span>
           </button>`).join('')}</div>
-        <p class="hint">Chiffre à droite : ${memberSort==='loy'?'fidélité au groupe sur les votes clés':'participation aux scrutins publics'}.</p>
+        <p class="hint">Chiffre à droite : ${memberSort==='loy'?'vote avec son groupe sur les votes clés':'participation aux scrutins publics'}.</p>
       </div>
     </div>
   </div>`;

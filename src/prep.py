@@ -170,12 +170,14 @@ def build_data(root=ROOT, log=lambda *a: None):
     build_transparence(out, P('data','an-transparence.json'), log)
     assign_slugs(out['deputes'])
     out['logos']=build_logos(root)
+    lx=_load('lexique',P('src','lexique.py'))
+    out['lex']=[[t['id'],t['terme'],t['definition'],t['formes']] for t in lx.TERMES]
     log('résumés',len(out['dos']),'votes avec résumé',sum(1 for v in out['votes'] if v.get('dk')))
     return out
 
 
 UI_CSS=['base.css','layout.css','votes.css','fiche.css','jeux.css','pages.css','home.css','scrutin.css','mobile.css']
-UI_JS=['core.js','popups.js','hemicycle.js','groupes.js','recherche.js','composants.js','home.js','fiche.js','votes.js','jeux.js','scrutin.js','router.js','start.js']
+UI_JS=['core.js','lexique.js','popups.js','hemicycle.js','groupes.js','recherche.js','composants.js','home.js','fiche.js','votes.js','jeux.js','scrutin.js','router.js','start.js']
 
 
 def ui_bundle(root, names):

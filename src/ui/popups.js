@@ -1,17 +1,7 @@
 /* ---------- Info-bulles « En bref » ---------- */
 const DOS = D.dos||{};
-const KIND_NOTE = {
-  'Motion de censure':"Pour renverser le Gouvernement, une motion de censure doit réunir 289 voix (la majorité absolue des députés). Seuls les « pour » sont comptés.",
-  'Motion de rejet':"Vote de procédure : si la motion est adoptée, le texte est rejeté d'emblée, sans examen des articles.",
-  'Résolution':"Une résolution exprime la position de l'Assemblée. Elle n'a pas force de loi.",
-  'Déclaration du Gouvernement':"Vote sur une déclaration du Gouvernement (article 50-1 de la Constitution), sans effet contraignant."
-};
-function lecNote(l){ if(!l) return null; l=l.toLowerCase();
-  if(l.includes('mixte paritaire')) return "Texte de compromis trouvé entre députés et sénateurs en commission mixte paritaire (CMP).";
-  if(l.includes('définitive')) return "Lecture définitive : après désaccord avec le Sénat, l'Assemblée a le dernier mot.";
-  if(l.includes('nouvelle lecture')) return "Nouvelle lecture : le texte revient après un échec du compromis avec le Sénat.";
-  if(l.includes('deuxième')) return "Deuxième lecture : le texte a déjà été voté une fois par chaque chambre.";
-  return null; }
+const KIND_NOTE = Object.fromEntries(Object.entries(KIND_LEX).filter(([k])=>!/^Pro/.test(k)).map(([k,id])=>[k,lexDef(id)]));
+function lecNote(l){ const id=lecLexId(l); return id && id!=='lecture'? lexDef(id) : (l && /deuxième|troisième/i.test(l)? lexDef('lecture') : null); }
 function summaryOf(v){
   const d = v.dk ? DOS[v.dk] : null;
   let txt = d ? d[0] : null;
@@ -34,13 +24,13 @@ function popHTML(v,nores){
   return h;
 }
 const TRANSP_HELP = `<div class="k">Transparence</div>
-  <p><b>HATVP</b> : la Haute Autorité pour la transparence de la vie publique publie les déclarations d'intérêts (activités, participations, fonctions) et de patrimoine des députés.</p>
+  <p><b>HATVP</b> : ${esc(lexDef('hatvp'))}</p>
   <div class="meta">
-    <span><b>Déport</b> : un député se retire volontairement d'un débat ou d'un vote où il pourrait avoir un conflit d'intérêts. Les déports sont inscrits dans un registre public de l'Assemblée.</span>
+    <span><b>Déport</b> : ${esc(lexDef('deport'))}</span>
     <span><b>Démission d'office</b> : le Conseil constitutionnel peut retirer son mandat à un député, par exemple après une peine d'inéligibilité ou des comptes de campagne irréguliers.</span>
     <span>Le casier judiciaire n'est pas public en France : il n'est pas affiché ici.</span>
   </div>
-  <div class="src">Sources : hatvp.fr et assemblee-nationale.fr.</div>`;
+  <div class="src">Sources : hatvp.fr et assemblee-nationale.fr. <a href="/lexique">Lexique</a></div>`;
 function showPop(btn){
   if(btn.dataset.ibt){ if(popFor && popFor!==btn) popFor.setAttribute('aria-expanded','false'); pop.innerHTML=TRANSP_HELP; pop.hidden=false; popFor=btn; btn.setAttribute('aria-expanded','true'); placePop(btn); return; }
   const v=votes[+btn.dataset.ib]; if(!v) return;

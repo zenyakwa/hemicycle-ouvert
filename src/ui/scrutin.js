@@ -5,9 +5,8 @@ function depVoteText(v,d){
   return {p:'Pour',c:'Contre',a:'Abstention'}[v.v[d.i]] || "N'a pas pris part au vote";
 }
 function keyDef(v){
-  const n=KIND_NOTE[v.k]; if(n) return [v.k,n];
-  const l=lecNote(v.lec); if(l) return [v.lec.charAt(0).toUpperCase()+v.lec.slice(1),l];
-  return null;
+  const id = (v.lec && lecLexId(v.lec)!=='lecture')? lecLexId(v.lec) : KIND_LEX[v.k];
+  return id && LEX[id]? LEX[id] : null;
 }
 let curScrutin=null;
 function renderScrutin(v){
@@ -20,23 +19,23 @@ function renderScrutin(v){
       <span class="gnums num"><span title="pour">${gp}</span><span title="contre">${gc}</span><span title="abstention">${ga}</span><span class="sr-only"> : ${gp} pour, ${gc} contre, ${ga} abstentions</span></span></li>`; }).join('');
   $('#view-scrutin').innerHTML = `
   <nav class="crumb" aria-label="Fil d'Ariane"><a href="/votes">Les décisions</a> <span aria-hidden="true">›</span> <a href="/votes/${v.cat}">${esc(CAT[v.cat])}</a></nav>
-  <p class="smeta"><span class="num">${fdate(v.dt)}</span> · ${esc(v.k)}${v.lec?' · '+esc(v.lec):''}</p>
+  <p class="smeta"><span class="num">${fdate(v.dt)}</span> · ${termLink(v.k,KIND_LEX[v.k])}${v.lec?' · '+termLink(v.lec,lecLexId(v.lec)):''}</p>
   <h1 tabindex="-1" class="stitle">${esc(vTitle(v))}</h1>
   <div class="sgrid">
     <div class="smain">
       <section class="resbox ${ok?'ok':'ko'}" aria-label="Résultat du vote">
         <div class="big">${ok?'ADOPTÉ':'REJETÉ'}</div>
-        <div class="bnums"><span><b class="num">${p}</b> pour</span><span><b class="num">${c}</b> contre</span><span><b class="num">${a}</b> abstention${a>1?'s':''}</span></div>
+        <div class="bnums"><span><b class="num">${p}</b> pour</span><span><b class="num">${c}</b> contre</span><span><b class="num">${a}</b> ${termLink('abstention'+(a>1?'s':''),'abstention')}</span></div>
         ${barHTML(p,c,a)}
         <p>Seuls les députés présents votent : ${p+c+a} ont pris part à ce vote.</p>
-        ${v.k==='Motion de censure'?`<p class="note">Une motion de censure n'est adoptée que si elle réunit au moins 289 voix « pour », soit la majorité absolue des députés. Seules les voix « pour » sont comptées.</p>`:''}
+        ${v.k==='Motion de censure'?`<p class="note">Une ${termLink('motion de censure','motion-de-censure')} n'est adoptée que si elle réunit au moins 289 voix « pour », soit la ${termLink('majorité absolue','majorite-absolue')} des députés. Seules les voix « pour » sont comptées.</p>`:''}
       </section>
       <section class="ssec">
         <h2>De quoi s'agit-il ?</h2>
         <p>${S.txt?`<b>En bref.</b> ${esc(S.txt)}`:`<b>Résumé à venir.</b>${v.dr?` <a href="${AN}/dyn/17/dossiers/${v.dr}" target="_blank" rel="noopener">Lire le texte officiel</a>`:''}`}</p>
         ${S.aut||S.promu?`<p class="note">${S.aut?`Déposé par ${esc(S.aut)}.`:''}${S.promu?` Loi promulguée le ${esc(S.promu.replace(/^\w+ /,''))}.`:''}</p>`:''}
         <p class="note">Intitulé du scrutin : ${esc(v.t.charAt(0).toUpperCase()+v.t.slice(1))}</p>
-        ${def?`<div class="defbox"><b>${esc(def[0])}</b> : ${esc(def[1])} <a href="/lexique">Voir le lexique</a></div>`:''}
+        ${def?`<div class="defbox"><b>${esc(def.terme)}</b> : ${esc(def.def)} <a href="/lexique#${def.id}">Voir le lexique</a></div>`:''}
       </section>
       <section class="ssec">
         <h2>Comment chaque groupe a voté</h2>

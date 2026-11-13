@@ -13,7 +13,7 @@ function groupsBar(withLinks){
   const tot=groupsOrdered.reduce((x,g)=>x+g.n,0), M=Math.floor(577/2)+1, max=Math.max(...groupsOrdered.map(g=>g.n));
   return `<div class="gbar" role="img" aria-label="Répartition des ${tot} députés en exercice par groupe, de gauche à droite de l'hémicycle">${groupsOrdered.map(g=>`<a class="seg" href="${groupPath(g)}" style="flex:${g.n};background:${g.col}" title="${esc(g.short)} : ${g.n} sièges" tabindex="-1" aria-hidden="true"></a>`).join('')}</div>
   <ul class="gbar-legend">${groupsOrdered.map(g=>`<li><a href="${groupPath(g)}"><span class="sw" style="background:${g.col}"></span>${esc(g.short)} <span class="n num">${g.n}</span><span class="sr-only"> sièges, ${esc(g.l)}</span></a></li>`).join('')}</ul>
-  <p class="gbar-maj">Majorité absolue : <b class="num">${M}</b> sièges.${max<M?" Aucun groupe ne l'atteint seul.":''}</p>
+  <p class="gbar-maj">${termLink('Majorité absolue','majorite-absolue')} : <b class="num">${M}</b> sièges.${max<M?" Aucun groupe ne l'atteint seul.":''}</p>
   ${withLinks?`<p class="gbar-links"><a href="/comprendre">Explorer l'hémicycle interactif</a><a href="/groupes">Les ${groupsOrdered.length} groupes</a><a href="/lexique">Lexique</a></p>`:''}`;
 }
 function renderHome(){

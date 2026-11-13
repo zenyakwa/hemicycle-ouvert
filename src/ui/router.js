@@ -60,7 +60,9 @@ function render(path, opts){
   v.el.hidden=false;
   setMeta(meta, p);
   document.querySelectorAll('.mainnav a').forEach(a=>{ if(a.dataset.nav===NAV[r.view]) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
-  if(!opts.pop && !opts.initial && !opts.keepScroll && r.view!=='depute'){ scrollTo(0,0); const h=v.el.querySelector('h1'); if(h) h.focus({preventScroll:true}); }
+  const hashEl = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if(hashEl && v.el.contains(hashEl)){ requestAnimationFrame(()=>{ hashEl.scrollIntoView({block:'start'}); hashEl.focus({preventScroll:true}); }); }
+  else if(!opts.pop && !opts.initial && !opts.keepScroll && r.view!=='depute'){ scrollTo(0,0); const h=v.el.querySelector('h1'); if(h) h.focus({preventScroll:true}); }
   curView=r.view;
 }
 function navigate(path, opts){
@@ -84,7 +86,7 @@ registerView('depute-liste','#view-depute',()=>{ renderDepList(); return {title:
 registerView('comprendre','#view-hemi',()=>({title:"Comprendre l'Assemblée", description:"L'hémicycle interactif : les 577 sièges et les groupes politiques de l'Assemblée nationale."}));
 registerView('groupes','#view-groupes',()=>{ selectGroup(null); return {title:'Les groupes politiques', description:"Les groupes politiques de l'Assemblée nationale : sièges, vote avec son groupe, participation."}; });
 registerView('groupe','#view-groupes',({sigle})=>{ const g=groupsOrdered.find(x=>slugG(x.short)===sigle); if(!g) return null; selectGroup(g.id); return {title:`${g.l} (${g.short})`, description:`Le groupe ${g.l} à l'Assemblée nationale : ${g.n} sièges, ses membres et ses derniers votes.`}; });
-registerView('lexique','#view-lexique',()=>({title:'Lexique', description:"Les mots de la procédure parlementaire, définis simplement."}));
+registerView('lexique','#view-lexique',()=>{ renderLexique(); return {title:'Lexique', description:"Les mots de la procédure parlementaire, définis simplement."}; });
 registerView('jouer','#view-jouer',()=>({title:'Jouer', description:"Deux jeux construits à partir des vrais votes de l'Assemblée nationale."}));
 registerView('devine','#view-game',()=>{ if(!gameState) newRound(); return {title:'Devine le vote', description:"Un vrai scrutin, un vrai groupe : comment la majorité du groupe a-t-elle voté ?"}; });
 registerView('quiz','#view-quiz',()=>{ renderQuiz(); return {title:'Trouve ton groupe', description:"20 vrais votes de l'Assemblée : découvrez quel groupe a voté comme vous."}; });

@@ -24,3 +24,10 @@
 .pc-t{font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase}
 .pc-d{color:var(--muted)}
 .res-vacant{display:flex;gap:10px;align-items:center;padding:8px 12px;min-height:44px;color:var(--muted)}
+.lexlist{margin:0;display:grid;gap:10px;max-width:820px}
+.lexitem{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.lexitem dt{font-weight:800;font-size:16px;scroll-margin-top:16px}
+.lexitem dt:focus{outline:none}
+.lexitem dt:target,.lexitem:has(dt:focus){border-color:var(--accent)}
+.lexitem dd{margin:4px 0 0;color:var(--ink)}
+a.lex{text-decoration:underline dotted;text-underline-offset:3px}

@@ -18,6 +18,7 @@
   .cat,.chip,.back,.more,.lnk,select,.seg button,.qz-nav button,.next,.themechips a,.gbar-legend a,.btn{min-height:44px}
   .sh-close{width:44px;height:44px}
   .crumb a{display:inline-flex;align-items:center;min-height:44px}
+  a.lex,.defbox a{display:inline-block;padding-block:15px;margin-block:-15px}
   .gv .t a,.dvote a,.trow a,.gp-top .full a{display:inline-block;padding-block:12px;margin-block:-12px}
   .ib{width:44px;height:44px;margin:-12px -10px -12px -4px;border:0;background:none;position:relative;isolation:isolate;color:var(--muted)}
   .ib::before{content:"";position:absolute;inset:11px;border:1.5px solid currentColor;border-radius:50%;background:var(--surface);z-index:-1}
