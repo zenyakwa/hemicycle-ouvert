@@ -12,7 +12,7 @@ function ib(idx,nores){ return `<button type="button" class="ib" data-ib="${idx}
 const pop = document.getElementById('pop'); let popFor=null, popTimer=null;
 function popHTML(v,nores){
   const s=summaryOf(v); const notes=[KIND_NOTE[v.k], lecNote(v.lec)].filter(Boolean);
-  let h = `<div class="k">En bref</div><p>${esc(s.txt || "Pas de résumé disponible pour ce vote. Ouvrez le scrutin pour lire le texte.")}</p>`;
+  let h = `<div class="k">En bref</div><p>${esc(s.txt || "Résumé à venir. Le texte officiel est accessible depuis la page du vote.")}</p>`;
   if(v.k==='Motion de rejet' && s.txt) h = `<div class="k">Le texte visé</div><p>${esc(s.txt)}</p>`;
   const meta=[];
   if(s.aut) meta.push(`Déposé par <b>${esc(s.aut)}</b>`);

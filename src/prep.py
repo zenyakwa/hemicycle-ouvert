@@ -45,6 +45,24 @@ def clean_aut(a):
     a=re.sub(r'^(MM\.|Mmes|M\.|Mme)\s+','',a).strip(' ,')
     return a
 def auto_resume(expo):
+    """Extrait automatique, coupé à 280 caractères."""
+    pick=auto_phrase(expo)
+    if pick and len(pick)>280:
+        pick=pick[:280].rsplit(' ',1)[0].rstrip(',;:')+'…'
+    return pick
+
+
+def resume_inutilisable(extrait, longueur_origine):
+    """Raison pour laquelle un extrait automatique ne doit pas être affiché, ou None."""
+    if not extrait: return None
+    e=extrait.strip()
+    if re.match(r'(?i)article\b', e): return 'commence par ARTICLE'
+    if len(re.findall(r'(?i)\barticle\s+(\d+|premier|liminaire)', e))>=2: return "liste d'articles"
+    if longueur_origine>280: return 'trop long'
+    return None
+
+
+def auto_phrase(expo):
     """Extrait automatique : la phrase de l'exposé des motifs qui annonce l'objet du texte."""
     if not expo: return None
     e=re.sub(r'^\s*(Mesdames,?\s*)?Messieurs,?\s*','',expo)
@@ -56,10 +74,7 @@ def auto_resume(expo):
     pick=pick or next((ph for ph in phrases if re.search(VERB,ph,re.I) and 40<len(ph)<600),None)
     pick=pick or (phrases[0] if phrases and len(phrases[0])>40 else None)
     if not pick: return None
-    pick=pick.strip()
-    if len(pick)>280:
-        pick=pick[:280].rsplit(' ',1)[0].rstrip(',;:')+'…'
-    return pick
+    return pick.strip()
 
 
 def classify_votes(d, log=print):
@@ -95,9 +110,13 @@ def build_resumes(out, X, res):
         if k in res.R:
             dos[k]=[res.R[k], clean_aut(v.get('auteur')), v.get('promu'), 1 if v.get('expo') else 0]
         else:
-            a=auto_resume(v.get('expo'))
-            if a or v.get('auteur') or v.get('promu'):
-                dos[k]=[a, clean_aut(v.get('auteur')), v.get('promu'), 2]
+            raw=auto_phrase(v.get('expo'))
+            if not (raw or v.get('auteur') or v.get('promu')): continue
+            why=resume_inutilisable(raw, len(raw or '')) if raw else "pas d'extrait de l'exposé des motifs"
+            if why:  # 3 = résumé à venir (raison en 5e position, pour le rapport)
+                dos[k]=[None, clean_aut(v.get('auteur')), v.get('promu'), 3, why]
+            else:
+                dos[k]=[auto_resume(v.get('expo')), clean_aut(v.get('auteur')), v.get('promu'), 2]
     for v in out['votes']:
         k=num2k.get(v['n'])
         if k in dos: v['dk']=k
@@ -176,6 +195,35 @@ def build_data(root=ROOT, log=lambda *a: None):
     return out
 
 
+def write_rapport(data, path):
+    """data/resumes-a-ecrire.md : dossiers sans résumé utilisable, à compléter dans src/resumes.py."""
+    par_dos={}
+    for v in data['votes']:
+        if v.get('dk'): par_dos.setdefault(v['dk'],[]).append(v)
+    def ligne(k,why):
+        vs=sorted(par_dos.get(k,[]),key=lambda v:v['dt'],reverse=True)
+        titre=(vs[0].get('dos') or vs[0]['t']) if vs else k
+        dr=next((v['dr'] for v in vs if v.get('dr')),None)
+        lien=f"[dossier](https://www.assemblee-nationale.fr/dyn/17/dossiers/{dr})" if dr else ''
+        nums=', '.join(f"[{v['n']}](https://www.assemblee-nationale.fr/dyn/17/scrutins/{v['n']})" for v in vs)
+        return (vs[0]['dt'] if vs else ''), f"| `{k}` | {titre.replace('|','/')} | {vs[0]['dt'] if vs else ''} | {nums} | {lien} | {why} |"
+    a=[ligne(k,d[4]) for k,d in data['dos'].items() if d[3]==3]
+    b=[ligne(k,'extrait automatique affiché') for k,d in data['dos'].items() if d[3]==2]
+    # votes sur un texte sans aucune donnée de dossier (ni extrait, ni auteur)
+    for v in data['votes']:
+        if not v.get('dk') and v.get('dr') and v['k'] not in ('Motion de censure',):
+            k=v['dr'].replace('DLR5L','')
+            par_dos.setdefault(k,[]).append(v)
+    c=[ligne(k,"aucune donnée du dossier") for k in sorted({v['dr'].replace('DLR5L','') for v in data['votes'] if not v.get('dk') and v.get('dr') and v['k']!='Motion de censure'})]
+    head="| Clé | Texte | Dernier vote | Scrutins | Lien officiel | Raison |\n|---|---|---|---|---|---|"
+    out=["# Résumés « En bref » à écrire","",
+         "Fichier régénéré à chaque passage de `src/prep.py`. Pour ajouter un résumé, ajouter une ligne dans `src/resumes.py` avec la clé du dossier (ex. `\"17N55223\": \"…\"`), puis relancer `python src/prep.py`.","",
+         f"## Affichés « Résumé à venir » ({len(a)})","",head]+[x for _,x in sorted(a,reverse=True)]+["",
+         f"## Extraits automatiques affichés, à relire ({len(b)})","",head]+[x for _,x in sorted(b,reverse=True)]+["",
+         f"## Votes sans aucun résumé ni donnée de dossier ({len(c)})","",head]+[x for _,x in sorted(c,reverse=True)]
+    with open(path,'w',encoding='utf-8') as f: f.write('\n'.join(out)+'\n')
+
+
 UI_CSS=['base.css','layout.css','votes.css','fiche.css','jeux.css','pages.css','home.css','scrutin.css','mobile.css']
 UI_JS=['core.js','lexique.js','popups.js','hemicycle.js','groupes.js','recherche.js','composants.js','home.js','fiche.js','votes.js','jeux.js','scrutin.js','router.js','start.js']
 
@@ -203,6 +251,7 @@ def main():
     data=build_data(ROOT, print)
     with open(os.path.join(ROOT,'data','data.json'),'w',encoding='utf-8') as f: f.write(data_json(data))
     with open(os.path.join(ROOT,'index.html'),'w',encoding='utf-8') as f: f.write(render_index(data))
+    write_rapport(data, os.path.join(ROOT,'data','resumes-a-ecrire.md'))
     print('index.html regénéré')
 
 

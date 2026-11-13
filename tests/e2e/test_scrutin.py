@@ -112,3 +112,22 @@ def test_liens_vers_les_votes_ailleurs(page_desktop, base_url):
     p.goto(base_url + "/depute/antoine-golliot")
     a = p.locator("#sheet .dvote a").first
     assert re.fullmatch(r"/scrutin/\d+", a.get_attribute("href"))
+
+
+def test_resume_a_venir(page_any, base_url):
+    p = page_any
+    p.goto(base_url + "/")
+    v = p.evaluate(DATA + ".votes.find(v=>v.dk && " + DATA + ".dos[v.dk][3]===3 && v.dr)")
+    assert v, "aucun vote avec résumé à venir"
+    p.goto(base_url + "/scrutin/%d" % v["n"])
+    sec = p.locator("#view-scrutin .ssec").first
+    expect(sec).to_contain_text("Résumé à venir")
+    expect(sec.get_by_role("link", name="Lire le texte officiel")).to_have_attribute("href", "https://www.assemblee-nationale.fr/dyn/17/dossiers/" + v["dr"])
+    assert "ARTICLE" not in sec.inner_text()
+
+
+def test_accueil_sans_extrait_brut(page_desktop, base_url):
+    p = page_desktop
+    p.goto(base_url + "/")
+    for t in p.locator("#homeVotes .vbref").all_inner_texts():
+        assert "ARTICLE" not in t

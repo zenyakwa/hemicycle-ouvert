@@ -8,8 +8,15 @@ def test_slugs_uniques(data):
 
 def test_build_data_identique_a_avant(data, root):
     old = json.load(gzip.open(os.path.join(root, "tests/unit/fixtures/data-avant.json.gz"), "rt", encoding="utf-8"))
-    for k in ("votes", "groups", "dos", "quiz", "cats", "generated", "lastScrutin", "nScrutins"):
+    for k in ("votes", "groups", "quiz", "cats", "generated", "lastScrutin", "nScrutins"):
         assert data[k] == old[k], k
+    # résumés : seuls changent les extraits automatiques devenus « résumé à venir » (drapeau 3)
+    assert data["dos"].keys() == old["dos"].keys()
+    for k, v in data["dos"].items():
+        if v[3] == 3:
+            assert old["dos"][k][3] == 2 and v[1:3] == old["dos"][k][1:3]
+        else:
+            assert v == old["dos"][k], k
     for a, b in zip(data["deputes"], old["deputes"]):
         a = {k: v for k, v in a.items() if k != "sl"}
         assert a == b
