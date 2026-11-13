@@ -6,6 +6,7 @@ const EXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 const MOIS = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
 const fdate = s => { const [y,m,d]=s.split('-'); return (+d)+' '+MOIS[+m-1]+' '+y; };
 const ABR = {UDDPLR:'UDR'};
+const LOGOS = D.logos||{};
 const ORDER = ['LFI-NFP','GDR','ECOS','SOC','LIOT','DEM','EPR','HOR','DR','UDDPLR','RN','NI'];
 const G = {}; D.groups.forEach(g=>{ g.short = ABR[g.a]||g.a; G[g.id]=g; });
 const groupsOrdered = ORDER.map(a=>D.groups.find(g=>g.a===a)).filter(Boolean);
@@ -35,7 +36,7 @@ const avgLoy = Math.round(deps.filter(d=>d.loy!=null).reduce((a,d)=>a+d.loy,0)/d
 function age(b){ const t=new Date('2026-09-28'), d=new Date(b); let a=t.getFullYear()-d.getFullYear(); if(t<new Date(t.getFullYear(),d.getMonth(),d.getDate())) a--; return a; }
 function groupBadge(g,px){
   const fs=Math.round(px*(g.short.length>5?0.2:g.short.length>3?0.28:0.36));
-  return `<span class="gbadge" style="width:${px}px;height:${px}px;font-size:${fs}px;background:${g.col};color:${textColorOn(g.col)}" aria-hidden="true">${esc(g.short)}<img src="logos/${esc(g.short)}.png" alt="" loading="lazy" onerror="this.remove()"></span>`;
+  return `<span class="gbadge" style="width:${px}px;height:${px}px;font-size:${fs}px;background:${g.col};color:${textColorOn(g.col)}" aria-hidden="true">${esc(g.short)}${LOGOS[g.short]?`<img src="${esc(LOGOS[g.short][0])}" alt="" loading="lazy">`:''}</span>`;
 }
 function initials(d){ return (d.p[0]||'')+(d.n.replace(/^(de |d'|le |la |du )/i,'')[0]||''); }
 function avatar(d,cls){ const g=G[d.g]; return `<span class="av ${cls||''}" style="background:${g?g.col:'#888'}">${esc(initials(d))}</span>`; }

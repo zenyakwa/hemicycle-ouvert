@@ -138,6 +138,23 @@ def build_transparence(out, TP, log=print):
     log('déports', sum(len(v) for v in dep_by.values()))
 
 
+def build_logos(root):
+    """Logos présents dans logos/ et crédits lus dans logos/SOURCES.md : {sigle: [chemin, page Commons, licence]}."""
+    d=os.path.join(root,'logos'); out={}
+    if not os.path.isdir(d): return out
+    src={}
+    sp=os.path.join(d,'SOURCES.md')
+    if os.path.exists(sp):
+        for line in open(sp,encoding='utf-8'):
+            c=[x.strip() for x in line.strip().strip('|').split('|')]
+            if len(c)==6 and c[0] and c[0]!='Sigle' and not c[0].startswith('-'):
+                m=re.search(r'\((https?://[^)]+)\)',c[3]); src[c[0]]=[m.group(1) if m else '',c[5]]
+    for f in sorted(os.listdir(d)):
+        k,_,ext=f.rpartition('.')
+        if ext in ('svg','png','webp') and k in src: out[k]=['/logos/'+f]+src[k]
+    return out
+
+
 def build_data(root=ROOT, log=lambda *a: None):
     """Construit le dictionnaire des données du site (sans rien écrire sur le disque)."""
     P=lambda *a: os.path.join(root,*a)
@@ -152,6 +169,7 @@ def build_data(root=ROOT, log=lambda *a: None):
     build_quiz(out, X, _load('quiz',P('src','quiz.py')), log)
     build_transparence(out, P('data','an-transparence.json'), log)
     assign_slugs(out['deputes'])
+    out['logos']=build_logos(root)
     log('résumés',len(out['dos']),'votes avec résumé',sum(1 for v in out['votes'] if v.get('dk')))
     return out
 

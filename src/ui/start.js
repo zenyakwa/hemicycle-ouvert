@@ -9,6 +9,9 @@ function showTab(t){
 document.querySelector('nav.tabs').addEventListener('click',e=>{ const b=e.target.closest('[data-tab]'); if(b) showTab(b.dataset.tab); });
 
 
+/* ---------- Crédits des logos ---------- */
+{ const L=Object.entries(LOGOS); if(L.length) $('#logoCredits').innerHTML = 'Logos des groupes : Wikimedia Commons, '+L.map(([k,[,page,lic]])=>`<a href="${esc(page)}" target="_blank" rel="noopener">${esc(k)}</a> (${esc(lic)})`).join(', ')+'. Les autres groupes sont représentés par leur sigle.'; }
+
 /* ---------- Démarrage ---------- */
 if(location.hash==='#votes') startTab='votes'; if(location.hash==='#jeu') startTab='game'; if(location.hash==='#questionnaire') startTab='quiz';
 showTab(['hemi','votes','game','quiz'].includes(startTab)?startTab:'hemi');

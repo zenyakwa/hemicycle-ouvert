@@ -25,3 +25,12 @@ def test_index_complet(data, root):
     assert prep.UI_JS[0] == "core.js" and prep.UI_JS[-1] == "start.js"
     for f in prep.UI_CSS + prep.UI_JS:
         assert os.path.exists(os.path.join(root, "src", "ui", f)), f
+
+
+def test_logos_connus_au_build(data, root):
+    logos = data["logos"]
+    assert logos["RN"][0] == "/logos/RN.png" and logos["ECOS"][0] == "/logos/ECOS.webp"
+    assert logos["RN"][1].startswith("https://commons.wikimedia.org/") and logos["RN"][2] == "CC BY-SA 4.0"
+    assert "SOC" not in logos
+    for path, page, lic in logos.values():
+        assert os.path.exists(os.path.join(root, path.lstrip("/")))
