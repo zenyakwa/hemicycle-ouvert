@@ -364,13 +364,13 @@ a.vcard.vlink:hover{border-color:var(--accent)}
 .ssec p{margin:0 0 8px;max-width:72ch}
 .defbox{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:8px}
 .glist{list-style:none;margin:8px 0 14px;padding:0;display:grid;gap:2px}
-.grow{display:grid;grid-template-columns:12px 64px minmax(0,1fr) 92px 110px 112px;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--line)}
+.grow{display:grid;grid-template-columns:12px 64px minmax(0,1fr) 92px 110px 150px;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--line)}
 .grow .sw{width:12px;height:12px;border-radius:50%}
 .gsig{font-weight:800;font-size:13px}
 .gname{color:var(--muted);font-size:13.5px;min-width:0}
 .gpos{font-weight:700;font-size:13.5px}
 .gpos.p{color:var(--pour)} .gpos.c{color:var(--contre)} .gpos.a{color:var(--abst)}
-.gnums{display:grid;grid-template-columns:repeat(3,1fr);text-align:right;font-size:13px}
+.gnums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:right;font-size:13px}
 @media (max-width:640px){
   .ghead{display:none}
   .grow{grid-template-columns:12px 64px minmax(0,1fr);row-gap:6px}
@@ -382,9 +382,8 @@ a.vcard.vlink:hover{border-color:var(--accent)}
   .grow .gnums{grid-row:4;grid-column:2/4;display:flex;gap:14px;text-align:left}
   .grow .gnums>span[title]::after{content:" " attr(title);font-family:var(--body);color:var(--muted)}
 }
-.ghead{display:grid;grid-template-columns:1fr 112px;font-size:12px;color:var(--muted);padding:0 6px;margin-top:8px}
-.ghead>span:first-child{grid-column:1}
-.ghead{grid-template-columns:1fr 37px 37px 38px;text-align:right}
+.ghead{display:grid;grid-template-columns:12px 64px minmax(0,1fr) 92px 110px 150px;gap:10px;font-size:12px;color:var(--muted);padding:0 6px;margin-top:8px}
+.ghead .gnums{grid-column:6}
 #vhemi{max-width:720px;margin:0 auto}
 .hlegend{justify-content:center}
 .hlegend i{display:inline-block;width:9px;height:9px;border-radius:50%}
@@ -399,6 +398,7 @@ a.vcard.vlink:hover{border-color:var(--accent)}
 .vrow:hover{border-color:var(--accent)}
 .vrow .vtitle{display:block}
 .vrow .vsub{display:block}
+@media (max-width:640px){.ghead{display:none}}
 /* navigation principale : icônes ; barre fixe en bas sur mobile */
 .mainnav svg{width:18px;height:18px;flex:none}
 @media (max-width:760px){
@@ -1301,7 +1301,7 @@ function renderScrutin(v){
       <section class="ssec">
         <h2>Comment chaque groupe a voté</h2>
         <p class="note">Position de la majorité de chaque groupe, puis le détail : pour, contre, abstentions.</p>
-        <div class="ghead" aria-hidden="true"><span></span><span>Pour</span><span>Contre</span><span>Abst.</span></div>
+        <div class="ghead" aria-hidden="true"><span class="gnums"><span>Pour</span><span>Contre</span><span>Abst.</span></span></div>
         <ul class="glist">${rows}</ul>
         <svg class="hemi" id="vhemi" viewBox="0 0 1000 520" role="img" aria-label="Vote de chaque député dans l'hémicycle : ${p} pour, ${c} contre, ${a} abstentions, les autres n'ont pas pris part au vote"></svg>
         <div class="bnums hlegend"><span><i style="background:var(--pour)"></i> pour</span><span><i style="background:var(--contre)"></i> contre</span><span><i style="background:var(--abst)"></i> abstention</span><span><i style="background:var(--absent)"></i> n'a pas pris part au vote</span></div>

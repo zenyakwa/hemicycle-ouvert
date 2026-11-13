@@ -6,7 +6,7 @@ from conftest import capture
 ETAPE = os.environ.get("ETAPE")
 VUES = [("accueil", "/"), ("fiche", "/depute/antoine-golliot"), ("decisions-sante", "/votes/sante"),
         ("scrutin", "/scrutin/9895"), ("introuvable", "/depute/inexistant"), ("devine", "/jouer/devine"),
-        ("groupes", "/groupes"), ("comprendre", "/comprendre"), ("mon-depute", "/depute")]
+        ("groupes", "/groupes"), ("comprendre", "/comprendre"), ("mon-depute", "/depute"), ("lexique", "/lexique")]
 
 
 @pytest.mark.skipif(not ETAPE, reason="captures seulement en fin d'étape (ETAPE=n)")
