@@ -156,6 +156,14 @@ def build_data(root=ROOT, log=lambda *a: None):
     return out
 
 
+UI_CSS=['base.css','layout.css','votes.css','fiche.css','jeux.css']
+UI_JS=['core.js','popups.js','hemicycle.js','groupes.js','recherche.js','fiche.js','votes.js','jeux.js','start.js']
+
+
+def ui_bundle(root, names):
+    return ''.join(open(os.path.join(root,'src','ui',n),encoding='utf-8').read() for n in names)
+
+
 def data_json(data):
     return json.dumps(data,ensure_ascii=False,separators=(',',':'))
 
@@ -163,6 +171,8 @@ def data_json(data):
 def render_index(data, root=ROOT):
     P=lambda *a: os.path.join(root,*a)
     t=open(P('src','template.html'),encoding='utf-8').read()
+    t=t.replace('__CSS__',ui_bundle(root,UI_CSS).rstrip('\n'))
+    t=t.replace('__JS__','(function(){\n'+ui_bundle(root,UI_JS)+'})();')
     body=t.replace('__DATA__',data_json(data).replace('</','<\\/'))
     i=body.index('</style>')+len('</style>')
     HEAD=open(P('src','head.html'),encoding='utf-8').read()

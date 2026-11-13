@@ -13,3 +13,15 @@ def test_build_data_identique_a_avant(data, root):
     for a, b in zip(data["deputes"], old["deputes"]):
         a = {k: v for k, v in a.items() if k != "sl"}
         assert a == b
+
+
+def test_index_complet(data, root):
+    import prep
+    html = prep.render_index(data, root)
+    for m in ("__CSS__", "__JS__", "__DATA__"):
+        assert m not in html
+    assert html.count("<script>") == 1
+    assert "function openDep" in html
+    assert prep.UI_JS[0] == "core.js" and prep.UI_JS[-1] == "start.js"
+    for f in prep.UI_CSS + prep.UI_JS:
+        assert os.path.exists(os.path.join(root, "src", "ui", f)), f
