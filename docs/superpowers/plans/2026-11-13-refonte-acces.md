@@ -56,7 +56,7 @@
 
 # Étape 1 : adresses partageables
 
-### Tâche 1 : lanceurs de tests en conteneur
+### Task 1: lanceurs de tests en conteneur
 
 **Fichiers :**
 - Créer : `tests/run-unit.sh`, `tests/run-e2e.sh`, `tests/e2e/conftest.py`, `tests/e2e/test_smoke.py`, `tests/unit/test_placeholder.py` (supprimé en tâche 2)
@@ -71,7 +71,7 @@
 - [ ] **Étape 4 : lancer** `tests/run-e2e.sh -q` → 2 passés (le site actuel sert `/` sans erreur). Lancer `tests/run-unit.sh -q` → 1 passé. `docker ps -a --filter name=ho-test` → vide.
 - [ ] **Étape 5 : commit** « Tests : lanceurs pytest et Playwright en conteneur ».
 
-### Tâche 2 : `prep.py` en fonctions + slugs des députés
+### Task 2: `prep.py` en fonctions + slugs des députés
 
 **Fichiers :**
 - Créer : `src/slug.py`, `tests/unit/test_slug.py`, `tests/unit/test_prep.py`, `tests/unit/conftest.py`
@@ -101,7 +101,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** les tests → tous passent ; `python3 src/prep.py` → `index.html regénéré` ; `git diff --stat index.html` ne montre que l'ajout des `sl`.
 - [ ] **Étape 5 : commit** « prep.py : fonctions testables et adresses des députés ».
 
-### Tâche 3 : découpage du gabarit
+### Task 3: découpage du gabarit
 
 **Fichiers :**
 - Créer : `src/ui/*.css`, `src/ui/*.js` (contenu actuel de `template.html` déplacé, sans changement de comportement)
@@ -116,7 +116,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** unit + `tests/run-e2e.sh -q` → tout passe (le site se comporte comme avant).
 - [ ] **Étape 5 : commit** « Gabarit découpé en fichiers src/ui, assemblés par prep.py ».
 
-### Tâche 4 : nginx, Dockerfile, logos
+### Task 4: nginx, Dockerfile, logos
 
 **Fichiers :**
 - Créer : `nginx.conf`, `logos/SOURCES.md`, `logos/<SIGLE>.svg|png`, `tests/e2e/test_serveur.py`
@@ -136,7 +136,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 5 : lancer** unit + e2e → tout passe ; capture de l'accueil montrant les logos.
 - [ ] **Étape 6 : commit** « nginx : repli vers index.html, gzip, cache court ; logos des groupes ».
 
-### Tâche 5 : routeur, navigation à 4 entrées, page introuvable, anciennes ancres, titres
+### Task 5: routeur, navigation à 4 entrées, page introuvable, anciennes ancres, titres
 
 **Fichiers :**
 - Créer : `src/ui/router.js`, `src/ui/introuvable.js`, `tests/e2e/test_routes.py`
@@ -164,7 +164,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** e2e + unit → tout passe.
 - [ ] **Étape 5 : commit** « Adresses partageables : routeur, navigation, page introuvable, anciennes ancres ».
 
-### Tâche 6 : fiche député liée à son adresse
+### Task 6: fiche député liée à son adresse
 
 **Fichiers :**
 - Modifier : `src/ui/fiche.js`, `src/ui/router.js`
@@ -185,7 +185,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** → tout passe.
 - [ ] **Étape 5 : commit** « Fiche député : adresse /depute/<nom>, Retour et nouvel onglet ».
 
-### Tâche 6 bis : compte rendu de l'étape 1
+### Task 6b: compte rendu de l'étape 1
 
 - [ ] Script `tests/e2e/test_captures.py::test_captures_etape` paramétré par `ETAPE` (variable d'environnement) : captures à 1280 et 375 px des vues `/`, `/depute/antoine-golliot`, `/votes/sante`, `/scrutin/<dernier>`, `/depute/inexistant`, `/jouer/devine`.
 - [ ] `ETAPE=1 tests/run-e2e.sh -q` → tout passe ; copier `.captures/etape-1/` dans le dossier de travail temporaire ; compte rendu au propriétaire (tests passés, captures, ce qui reste provisoire). **Attendre son retour avant l'étape 2.**
@@ -194,7 +194,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 
 # Étape 2 : accueil et mobile
 
-### Tâche 7 : nouvel accueil
+### Task 7: nouvel accueil
 
 **Fichiers :**
 - Créer : `src/ui/home.js`, `src/ui/home.css`, `src/ui/composants.js`, `tests/e2e/test_accueil.py`
@@ -215,7 +215,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** → tout passe.
 - [ ] **Étape 5 : commit** « Accueil : recherche, dernières décisions, Assemblée en un coup d'œil, jeux ».
 
-### Tâche 8 : mobile (barre basse, cibles tactiles, textes tactiles)
+### Task 8: mobile (barre basse, cibles tactiles, textes tactiles)
 
 **Fichiers :**
 - Créer : `src/ui/mobile.css`, `tests/e2e/test_mobile.py`
@@ -239,7 +239,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 
 # Étape 3 : pages de vote
 
-### Tâche 9 : page `/scrutin/<numéro>`
+### Task 9: page `/scrutin/<numéro>`
 
 **Fichiers :**
 - Créer : `src/ui/scrutin.js`, `src/ui/scrutin.css`, `tests/e2e/test_scrutin.py`
@@ -269,7 +269,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 
 # Étape 4 : recherche par code postal
 
-### Tâche 10 : table code postal → circonscription
+### Task 10: table code postal → circonscription
 
 **Fichiers :**
 - Créer : `src/cp.py`, `tests/unit/test_cp.py`, `tests/unit/fixtures/laposte-extrait.csv`, `tests/unit/fixtures/bureaux-extrait.csv`
@@ -295,7 +295,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** unit (+ `-m reseau` une fois) → passe ; `python3 src/fetch.py` (réseau réel) se termine sans erreur ; `data/cp.json` < 1,5 Mo.
 - [ ] **Étape 5 : commit** « fetch.py : table code postal → circonscription (La Poste, data.gouv) ».
 
-### Tâche 11 : recherche par code postal et par ville
+### Task 11: recherche par code postal et par ville
 
 **Fichiers :**
 - Modifier : `src/ui/recherche.js` (ou `composants.js` si `searchBox` y est), `src/ui/composants.js`
@@ -323,7 +323,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 
 # Étape 5 : lexique, vocabulaire, résumés
 
-### Tâche 12 : lexique et vocabulaire
+### Task 12: lexique et vocabulaire
 
 **Fichiers :**
 - Créer : `src/lexique.py`, `src/ui/lexique.js`, `tests/unit/test_lexique.py`, `tests/e2e/test_lexique.py`
@@ -340,7 +340,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 5 : lancer** → tout passe.
 - [ ] **Étape 6 : commit** « Lexique de 25 termes ; « Vote avec son groupe » remplace cohésion et fidélité ».
 
-### Tâche 13 : résumés inutilisables et rapport
+### Task 13: résumés inutilisables et rapport
 
 **Fichiers :**
 - Modifier : `src/prep.py`, `src/ui/popups.js`, `src/ui/composants.js`, `src/ui/scrutin.js`
@@ -361,7 +361,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 
 # Étape 6 : accessibilité
 
-### Tâche 14 : liste alternative de l'hémicycle, repères, clavier
+### Task 14: liste alternative de l'hémicycle, repères, clavier
 
 **Fichiers :**
 - Modifier : `src/template.html` (lien d'évitement, repères), `src/ui/hemicycle.js`, `src/ui/fiche.js` (piège à focus), `src/ui/composants.js`
@@ -380,7 +380,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** → tout passe.
 - [ ] **Étape 5 : commit** « Accessibilité : liste de l'hémicycle, lien d'évitement, focus dans la fiche ».
 
-### Tâche 15 : contrastes
+### Task 15: contrastes
 
 **Fichiers :**
 - Modifier : `src/ui/base.css` (jetons), feuilles qui utilisent `--abst` pour du texte
@@ -396,7 +396,7 @@ Pour le dernier test : avant de modifier `prep.py`, exécuter l'ancien `prep.py`
 - [ ] **Étape 4 : lancer** tous les tests (unit + e2e) → tout passe.
 - [ ] **Étape 5 : commit** « Contrastes : au moins 4,5:1 dans les deux thèmes ».
 
-### Tâche 16 : vérification finale et préparation de la fusion
+### Task 16: vérification finale et préparation de la fusion
 
 - [ ] Test de neutralité e2e : texte visible de `/`, `/votes`, une page de vote, `/groupes`, `/lexique`, une fiche → aucun mot interdit (contraintes globales), hors titres officiels des textes (exclus via l'attribut `data-officiel` sur les titres).
 - [ ] `python3 src/fetch.py && python3 src/prep.py` sur la branche → succès ; `git status` ne montre que `data/` et `index.html` modifiés (comme l'updater).
