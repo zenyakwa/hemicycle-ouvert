@@ -21,7 +21,7 @@ function renderVotes(){
     const gs = groupsOrdered.map(g=>v.gv.find(x=>x[0]===g.id)).filter(Boolean);
     return `<a class="vcard vrow" href="/scrutin/${v.n}">
         <span class="vmeta"><span class="res ${v.so==='adopté'?'ok':'ko'}">${v.so==='adopté'?'Adopté':'Rejeté'}</span><span class="tag">${esc(CAT[v.cat])}</span><span>${esc(v.k)}${v.lec?' · '+esc(v.lec):''}</span><span class="num">${fdate(v.dt)}</span></span>
-        <span class="vtitle">${esc(vTitle(v))}${v.dos && v.k==='Motion de rejet'?`<span class="vsub">Motion de rejet préalable</span>`:''}</span>
+        <span class="vtitle" data-officiel>${esc(vTitle(v))}${v.dos && v.k==='Motion de rejet'?`<span class="vsub">Motion de rejet préalable</span>`:''}</span>
         ${barHTML(p,c,a)}
         <span class="vres">${esc(resultSentence(v))}</span>
         <span class="gdots" aria-hidden="true">${gs.map(x=>`<span class="gdot"><i style="background:${posColor[x[1]]||'var(--absent)'}"></i>${esc(G[x[0]].short)}</span>`).join('')}</span>

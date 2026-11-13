@@ -62,7 +62,7 @@ function renderGroup(g){
       <div>
         <div class="block-h" style="margin-bottom:6px"><h2 style="font-size:20px">Ses derniers votes</h2></div>
         <div class="gvotes">${recent.map(v=>{ const gv=v.gv.find(x=>x[0]===g.id); const pc=gv?posCls[gv[1]]:'x'; return `
-          <div class="gv"><span class="d">${fdate(v.dt)}</span><span class="t" style="display:flex;align-items:center;min-width:0"><a href="/scrutin/${v.n}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</span><span class="pos ${pc}">${gv?esc(gv[1]):'—'}</span></div>`; }).join('')}</div>
+          <div class="gv"><span class="d">${fdate(v.dt)}</span><span class="t" style="display:flex;align-items:center;min-width:0"><a href="/scrutin/${v.n}" data-officiel style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</span><span class="pos ${pc}">${gv?esc(gv[1]):'—'}</span></div>`; }).join('')}</div>
       </div>
       <div>
         <div class="toolbar" style="justify-content:space-between;margin-bottom:10px">

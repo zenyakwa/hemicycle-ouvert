@@ -899,7 +899,7 @@ function renderGroup(g){
       <div>
         <div class="block-h" style="margin-bottom:6px"><h2 style="font-size:20px">Ses derniers votes</h2></div>
         <div class="gvotes">${recent.map(v=>{ const gv=v.gv.find(x=>x[0]===g.id); const pc=gv?posCls[gv[1]]:'x'; return `
-          <div class="gv"><span class="d">${fdate(v.dt)}</span><span class="t" style="display:flex;align-items:center;min-width:0"><a href="/scrutin/${v.n}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</span><span class="pos ${pc}">${gv?esc(gv[1]):'—'}</span></div>`; }).join('')}</div>
+          <div class="gv"><span class="d">${fdate(v.dt)}</span><span class="t" style="display:flex;align-items:center;min-width:0"><a href="/scrutin/${v.n}" data-officiel style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</span><span class="pos ${pc}">${gv?esc(gv[1]):'—'}</span></div>`; }).join('')}</div>
       </div>
       <div>
         <div class="toolbar" style="justify-content:space-between;margin-bottom:10px">
@@ -1048,8 +1048,8 @@ function voteCard(v){
   const s=summaryOf(v), [p,c,a]=v.sy;
   return `<a class="vcard vlink" href="/scrutin/${v.n}">
     <span class="vmeta"><span class="res ${v.so==='adopté'?'ok':'ko'}">${v.so==='adopté'?'Adopté':'Rejeté'}</span><span class="num">${fdate(v.dt)}</span><span class="tag">${esc(CAT[v.cat])}</span><span>${esc(v.k)}</span></span>
-    <span class="vtitle">${esc(vTitle(v))}</span>
-    <span class="vbref"><b>En bref.</b> ${s.txt?esc(s.txt):'Résumé à venir.'}</span>
+    <span class="vtitle" data-officiel>${esc(vTitle(v))}</span>
+    <span class="vbref" data-officiel><b>En bref.</b> ${s.txt?esc(s.txt):'Résumé à venir.'}</span>
     ${barHTML(p,c,a)}
     <span class="vres">${esc(resultSentence(v))}</span>
   </a>`;
@@ -1118,7 +1118,7 @@ function openDep(i, opts){
   </div>
   <div class="sh-sec">
     <h4>Ses derniers votes clés</h4>
-    ${shown.length? shown.map(v=>{ const c=v.v[d.i]; const pc={p:'p',c:'c',a:'a'}[c]||'x'; return `<div class="dvote"><div><div class="d">${fdate(v.dt)} · ${esc(v.k)} · ${v.so==='adopté'?'adopté':'rejeté'}</div><a href="/scrutin/${v.n}">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</div><span class="pos ${pc}">${posName[c]}</span></div>`; }).join('') : '<p class="note">Aucun vote clé depuis son arrivée.</p>'}
+    ${shown.length? shown.map(v=>{ const c=v.v[d.i]; const pc={p:'p',c:'c',a:'a'}[c]||'x'; return `<div class="dvote"><div><div class="d">${fdate(v.dt)} · ${esc(v.k)} · ${v.so==='adopté'?'adopté':'rejeté'}</div><a href="/scrutin/${v.n}" data-officiel>${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</div><span class="pos ${pc}">${posName[c]}</span></div>`; }).join('') : '<p class="note">Aucun vote clé depuis son arrivée.</p>'}
   </div>
   <div class="sh-sec">
     <h4>Aller plus loin sur le site de l'Assemblée</h4>
@@ -1181,7 +1181,7 @@ function renderVotes(){
     const gs = groupsOrdered.map(g=>v.gv.find(x=>x[0]===g.id)).filter(Boolean);
     return `<a class="vcard vrow" href="/scrutin/${v.n}">
         <span class="vmeta"><span class="res ${v.so==='adopté'?'ok':'ko'}">${v.so==='adopté'?'Adopté':'Rejeté'}</span><span class="tag">${esc(CAT[v.cat])}</span><span>${esc(v.k)}${v.lec?' · '+esc(v.lec):''}</span><span class="num">${fdate(v.dt)}</span></span>
-        <span class="vtitle">${esc(vTitle(v))}${v.dos && v.k==='Motion de rejet'?`<span class="vsub">Motion de rejet préalable</span>`:''}</span>
+        <span class="vtitle" data-officiel>${esc(vTitle(v))}${v.dos && v.k==='Motion de rejet'?`<span class="vsub">Motion de rejet préalable</span>`:''}</span>
         ${barHTML(p,c,a)}
         <span class="vres">${esc(resultSentence(v))}</span>
         <span class="gdots" aria-hidden="true">${gs.map(x=>`<span class="gdot"><i style="background:${posColor[x[1]]||'var(--absent)'}"></i>${esc(G[x[0]].short)}</span>`).join('')}</span>
@@ -1329,7 +1329,7 @@ function renderScrutin(v){
   $('#view-scrutin').innerHTML = `
   <nav class="crumb" aria-label="Fil d'Ariane"><a href="/votes">Les décisions</a> <span aria-hidden="true">›</span> <a href="/votes/${v.cat}">${esc(CAT[v.cat])}</a></nav>
   <p class="smeta"><span class="num">${fdate(v.dt)}</span> · ${termLink(v.k,KIND_LEX[v.k])}${v.lec?' · '+termLink(v.lec,lecLexId(v.lec)):''}</p>
-  <h1 tabindex="-1" class="stitle">${esc(vTitle(v))}</h1>
+  <h1 tabindex="-1" class="stitle" data-officiel>${esc(vTitle(v))}</h1>
   <div class="sgrid">
     <div class="smain">
       <section class="resbox ${ok?'ok':'ko'}" aria-label="Résultat du vote">
@@ -1341,9 +1341,9 @@ function renderScrutin(v){
       </section>
       <section class="ssec">
         <h2>De quoi s'agit-il ?</h2>
-        <p>${S.txt?`<b>En bref.</b> ${esc(S.txt)}`:`<b>Résumé à venir.</b>${v.dr?` <a href="${AN}/dyn/17/dossiers/${v.dr}" target="_blank" rel="noopener">Lire le texte officiel</a>`:''}`}</p>
+        <p data-officiel>${S.txt?`<b>En bref.</b> ${esc(S.txt)}`:`<b>Résumé à venir.</b>${v.dr?` <a href="${AN}/dyn/17/dossiers/${v.dr}" target="_blank" rel="noopener">Lire le texte officiel</a>`:''}`}</p>
         ${S.aut||S.promu?`<p class="note">${S.aut?`Déposé par ${esc(S.aut)}.`:''}${S.promu?` Loi promulguée le ${esc(S.promu.replace(/^\w+ /,''))}.`:''}</p>`:''}
-        <p class="note">Intitulé du scrutin : ${esc(v.t.charAt(0).toUpperCase()+v.t.slice(1))}</p>
+        <p class="note" data-officiel>Intitulé du scrutin : ${esc(v.t.charAt(0).toUpperCase()+v.t.slice(1))}</p>
         ${def?`<div class="defbox"><b>${esc(def.terme)}</b> : ${esc(def.def)} <a href="/lexique#${def.id}">Voir le lexique</a></div>`:''}
       </section>
       <section class="ssec">

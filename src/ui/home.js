@@ -3,8 +3,8 @@ function voteCard(v){
   const s=summaryOf(v), [p,c,a]=v.sy;
   return `<a class="vcard vlink" href="/scrutin/${v.n}">
     <span class="vmeta"><span class="res ${v.so==='adopté'?'ok':'ko'}">${v.so==='adopté'?'Adopté':'Rejeté'}</span><span class="num">${fdate(v.dt)}</span><span class="tag">${esc(CAT[v.cat])}</span><span>${esc(v.k)}</span></span>
-    <span class="vtitle">${esc(vTitle(v))}</span>
-    <span class="vbref"><b>En bref.</b> ${s.txt?esc(s.txt):'Résumé à venir.'}</span>
+    <span class="vtitle" data-officiel>${esc(vTitle(v))}</span>
+    <span class="vbref" data-officiel><b>En bref.</b> ${s.txt?esc(s.txt):'Résumé à venir.'}</span>
     ${barHTML(p,c,a)}
     <span class="vres">${esc(resultSentence(v))}</span>
   </a>`;

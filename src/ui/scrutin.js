@@ -27,7 +27,7 @@ function renderScrutin(v){
   $('#view-scrutin').innerHTML = `
   <nav class="crumb" aria-label="Fil d'Ariane"><a href="/votes">Les décisions</a> <span aria-hidden="true">›</span> <a href="/votes/${v.cat}">${esc(CAT[v.cat])}</a></nav>
   <p class="smeta"><span class="num">${fdate(v.dt)}</span> · ${termLink(v.k,KIND_LEX[v.k])}${v.lec?' · '+termLink(v.lec,lecLexId(v.lec)):''}</p>
-  <h1 tabindex="-1" class="stitle">${esc(vTitle(v))}</h1>
+  <h1 tabindex="-1" class="stitle" data-officiel>${esc(vTitle(v))}</h1>
   <div class="sgrid">
     <div class="smain">
       <section class="resbox ${ok?'ok':'ko'}" aria-label="Résultat du vote">
@@ -39,9 +39,9 @@ function renderScrutin(v){
       </section>
       <section class="ssec">
         <h2>De quoi s'agit-il ?</h2>
-        <p>${S.txt?`<b>En bref.</b> ${esc(S.txt)}`:`<b>Résumé à venir.</b>${v.dr?` <a href="${AN}/dyn/17/dossiers/${v.dr}" target="_blank" rel="noopener">Lire le texte officiel</a>`:''}`}</p>
+        <p data-officiel>${S.txt?`<b>En bref.</b> ${esc(S.txt)}`:`<b>Résumé à venir.</b>${v.dr?` <a href="${AN}/dyn/17/dossiers/${v.dr}" target="_blank" rel="noopener">Lire le texte officiel</a>`:''}`}</p>
         ${S.aut||S.promu?`<p class="note">${S.aut?`Déposé par ${esc(S.aut)}.`:''}${S.promu?` Loi promulguée le ${esc(S.promu.replace(/^\w+ /,''))}.`:''}</p>`:''}
-        <p class="note">Intitulé du scrutin : ${esc(v.t.charAt(0).toUpperCase()+v.t.slice(1))}</p>
+        <p class="note" data-officiel>Intitulé du scrutin : ${esc(v.t.charAt(0).toUpperCase()+v.t.slice(1))}</p>
         ${def?`<div class="defbox"><b>${esc(def.terme)}</b> : ${esc(def.def)} <a href="/lexique#${def.id}">Voir le lexique</a></div>`:''}
       </section>
       <section class="ssec">
