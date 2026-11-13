@@ -41,6 +41,10 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+.skip:focus{top:12px}
+main:focus{outline:none}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important;scroll-behavior:auto!important}}
 /* header */
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .brand{text-decoration:none;color:inherit;display:block}
@@ -317,6 +321,15 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 .lexitem dt:target,.lexitem:has(dt:focus){border-color:var(--accent)}
 .lexitem dd{margin:4px 0 0;color:var(--ink)}
 a.lex{text-decoration:underline dotted;text-underline-offset:3px}
+#hemiListBtn{margin-top:10px}
+.hemilist,.votelist{margin-top:12px;columns:2 300px;column-gap:28px}
+.votelist{columns:auto;display:block}
+.votelist summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.votelist[open]{columns:2 300px}
+.hemilist section,.votelist section{break-inside:avoid;margin-bottom:14px}
+.hemilist h3,.votelist h3{font-size:14px;margin:0 0 4px}
+.hemilist ul,.votelist ul{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:14px}
+.hemilist small,.votelist small{color:var(--muted)}
 /* accueil */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .entries{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:8px 0 6px}
@@ -419,6 +432,8 @@ a.vcard.vlink:hover{border-color:var(--accent)}
   .cat,.chip,.back,.more,.lnk,select,.seg button,.qz-nav button,.next,.themechips a,.gbar-legend a,.btn{min-height:44px}
   .sh-close{width:44px;height:44px}
   .crumb a{display:inline-flex;align-items:center;min-height:44px}
+  .hemilist li,.votelist li{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .hemilist li a,.votelist li a{display:inline-flex;align-items:center;min-height:44px}
   a.lex,.defbox a{display:inline-block;padding-block:15px;margin-block:-15px}
   .gv .t a,.dvote a,.trow a,.gp-top .full a{display:inline-block;padding-block:12px;margin-block:-12px}
   .ib{width:44px;height:44px;margin:-12px -10px -12px -4px;border:0;background:none;position:relative;isolation:isolate;color:var(--muted)}
@@ -430,6 +445,7 @@ a.vcard.vlink:hover{border-color:var(--accent)}
 <body>
 
 
+<a class="skip" href="#main">Aller au contenu</a>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/">
@@ -446,7 +462,7 @@ a.vcard.vlink:hover{border-color:var(--accent)}
     <a href="/jouer" data-nav="jouer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 11v3M6.5 12.5h3"/><circle cx="15.5" cy="12" r=".8" fill="currentColor"/><circle cx="17.5" cy="14" r=".8" fill="currentColor"/></svg><span>Jouer</span></a>
   </nav>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <div id="view-home" class="view" hidden>
       <section class="pagehead">
         <h1 tabindex="-1">Ce que fait votre Assemblée, en clair.</h1>
@@ -519,6 +535,8 @@ a.vcard.vlink:hover{border-color:var(--accent)}
           <svg class="hemi" id="hemi" viewBox="0 0 1000 520" role="img" aria-label="Hémicycle de l'Assemblée nationale"></svg>
           <div class="hemi-center"><div class="big" id="hc-big">577</div><div class="lbl" id="hc-lbl">députés</div></div>
         </div>
+        <button type="button" class="btn ghost" id="hemiListBtn" aria-expanded="false" aria-controls="hemiList">Afficher en liste</button>
+        <div id="hemiList" class="hemilist" hidden></div>
         <p class="hint" id="hemiHint">Survolez un siège pour voir le député, cliquez pour ouvrir sa fiche. Les groupes sont placés de gauche à droite comme dans l'hémicycle.</p>
       </div>
     </div>
@@ -785,6 +803,15 @@ function drawHemi(svg, colorFn, opts){
 }
 const hemi = $('#hemi');
 drawHemi(hemi, d=>G[d.g]?G[d.g].col:'#999');
+hemi.setAttribute('aria-label', "Hémicycle de l'Assemblée nationale, de gauche à droite : "+groupsOrdered.map(g=>`${g.short} ${g.n} sièges`).join(', ')+". La liste des députés est disponible avec le bouton « Afficher en liste ».");
+function renderHemiList(){
+  const sans=deps.filter(d=>!G[d.g]);
+  const blocs=groupsOrdered.map(g=>[g.l, g.members]).concat(sans.length?[['Sans groupe',sans]]:[]);
+  $('#hemiList').innerHTML = blocs.map(([l,m])=>`<section><h3>${esc(l)} · ${m.length} sièges</h3><ul>${m.slice().sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${esc(d.dep)}, ${+d.ci}${+d.ci===1?'re':'e'} circ.</small></li>`).join('')}</ul></section>`).join('');
+}
+$('#hemiListBtn').addEventListener('click',e=>{ const b=e.currentTarget, open=b.getAttribute('aria-expanded')!=='true';
+  if(open && !$('#hemiList').innerHTML) renderHemiList();
+  b.setAttribute('aria-expanded',open); b.textContent=open?'Masquer la liste':'Afficher en liste'; $('#hemiList').hidden=!open; });
 
 // tooltip + click
 const tip=$('#tip');
@@ -1115,7 +1142,17 @@ function closeDep(opts){
   if(f && document.contains(f)) f.focus();
 }
 overlay.addEventListener('click',e=>{ if(e.target===overlay || e.target.closest('.sh-close')) closeDep(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !overlay.hidden) closeDep(); });
+document.addEventListener('keydown',e=>{
+  if(overlay.hidden) return;
+  if(e.key==='Escape'){ closeDep(); return; }
+  if(e.key==='Tab'){ // le focus reste dans la fiche
+    const F=[...sheet.querySelectorAll('a[href],button,input,select,[tabindex]:not([tabindex="-1"])')].filter(x=>x.offsetParent!==null);
+    if(!F.length) return;
+    const i=F.indexOf(document.activeElement);
+    if(e.shiftKey && i<=0){ e.preventDefault(); F[F.length-1].focus(); }
+    else if(!e.shiftKey && (i===-1 || i===F.length-1)){ e.preventDefault(); F[0].focus(); }
+  }
+});
 
 /* ---------- Votes ---------- */
 let fCat='all', fRes='adopté', fKind='', fQ='', limit=20;
@@ -1269,6 +1306,12 @@ function keyDef(v){
   const id = (v.lec && lecLexId(v.lec)!=='lecture')? lecLexId(v.lec) : KIND_LEX[v.k];
   return id && LEX[id]? LEX[id] : null;
 }
+function voteListHTML(v){
+  const cat={p:[],c:[],a:[],x:[],y:[]};
+  deps.forEach(d=>{ const k = v.dt<d.d? 'y' : ({p:'p',c:'c',a:'a'})[v.v[d.i]]||'x'; cat[k].push(d); });
+  const T={p:'Pour',c:'Contre',a:'Abstention',x:"N'a pas pris part au vote",y:'Pas encore député à cette date'};
+  return Object.keys(T).filter(k=>cat[k].length).map(k=>`<section><h3>${T[k]} (${cat[k].length})</h3><ul>${cat[k].sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${esc(G[d.g]?.short||'')}</small></li>`).join('')}</ul></section>`).join('');
+}
 let curScrutin=null;
 function renderScrutin(v){
   curScrutin=v;
@@ -1304,6 +1347,7 @@ function renderScrutin(v){
         <div class="ghead" aria-hidden="true"><span class="gnums"><span>Pour</span><span>Contre</span><span>Abst.</span></span></div>
         <ul class="glist">${rows}</ul>
         <svg class="hemi" id="vhemi" viewBox="0 0 1000 520" role="img" aria-label="Vote de chaque député dans l'hémicycle : ${p} pour, ${c} contre, ${a} abstentions, les autres n'ont pas pris part au vote"></svg>
+        <details id="voteList" class="votelist"><summary>Voir le vote de chaque député en liste</summary>${voteListHTML(v)}</details>
         <div class="bnums hlegend"><span><i style="background:var(--pour)"></i> pour</span><span><i style="background:var(--contre)"></i> contre</span><span><i style="background:var(--abst)"></i> abstention</span><span><i style="background:var(--absent)"></i> n'a pas pris part au vote</span></div>
       </section>
     </div>
@@ -1420,6 +1464,7 @@ document.addEventListener('click',e=>{
   e.preventDefault(); navigate(a.getAttribute('href'));
 });
 addEventListener('popstate',()=>render(location.pathname,{pop:true}));
+document.querySelector('.skip').addEventListener('click',e=>{ e.preventDefault(); const h=[...document.querySelectorAll('main h1')].find(x=>x.offsetParent!==null); (h||$('#main')).focus(); });
 
 /* ---------- Vues ---------- */
 registerView('home','#view-home',()=>({title:'Ce que fait votre Assemblée, en clair', description:"Trouver son député, comprendre ce que l'Assemblée nationale a décidé, et comment chaque groupe a voté."}));

@@ -79,6 +79,7 @@ document.addEventListener('click',e=>{
   e.preventDefault(); navigate(a.getAttribute('href'));
 });
 addEventListener('popstate',()=>render(location.pathname,{pop:true}));
+document.querySelector('.skip').addEventListener('click',e=>{ e.preventDefault(); const h=[...document.querySelectorAll('main h1')].find(x=>x.offsetParent!==null); (h||$('#main')).focus(); });
 
 /* ---------- Vues ---------- */
 registerView('home','#view-home',()=>({title:'Ce que fait votre Assemblée, en clair', description:"Trouver son député, comprendre ce que l'Assemblée nationale a décidé, et comment chaque groupe a voté."}));

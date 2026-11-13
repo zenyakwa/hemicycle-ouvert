@@ -6,6 +6,7 @@
 __CSS__
 </style>
 
+<a class="skip" href="#main">Aller au contenu</a>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/">
@@ -22,7 +23,7 @@ __CSS__
     <a href="/jouer" data-nav="jouer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 11v3M6.5 12.5h3"/><circle cx="15.5" cy="12" r=".8" fill="currentColor"/><circle cx="17.5" cy="14" r=".8" fill="currentColor"/></svg><span>Jouer</span></a>
   </nav>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <div id="view-home" class="view" hidden>
       <section class="pagehead">
         <h1 tabindex="-1">Ce que fait votre Assemblée, en clair.</h1>
@@ -95,6 +96,8 @@ __CSS__
           <svg class="hemi" id="hemi" viewBox="0 0 1000 520" role="img" aria-label="Hémicycle de l'Assemblée nationale"></svg>
           <div class="hemi-center"><div class="big" id="hc-big">577</div><div class="lbl" id="hc-lbl">députés</div></div>
         </div>
+        <button type="button" class="btn ghost" id="hemiListBtn" aria-expanded="false" aria-controls="hemiList">Afficher en liste</button>
+        <div id="hemiList" class="hemilist" hidden></div>
         <p class="hint" id="hemiHint">Survolez un siège pour voir le député, cliquez pour ouvrir sa fiche. Les groupes sont placés de gauche à droite comme dans l'hémicycle.</p>
       </div>
     </div>

@@ -8,6 +8,12 @@ function keyDef(v){
   const id = (v.lec && lecLexId(v.lec)!=='lecture')? lecLexId(v.lec) : KIND_LEX[v.k];
   return id && LEX[id]? LEX[id] : null;
 }
+function voteListHTML(v){
+  const cat={p:[],c:[],a:[],x:[],y:[]};
+  deps.forEach(d=>{ const k = v.dt<d.d? 'y' : ({p:'p',c:'c',a:'a'})[v.v[d.i]]||'x'; cat[k].push(d); });
+  const T={p:'Pour',c:'Contre',a:'Abstention',x:"N'a pas pris part au vote",y:'Pas encore député à cette date'};
+  return Object.keys(T).filter(k=>cat[k].length).map(k=>`<section><h3>${T[k]} (${cat[k].length})</h3><ul>${cat[k].sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${esc(G[d.g]?.short||'')}</small></li>`).join('')}</ul></section>`).join('');
+}
 let curScrutin=null;
 function renderScrutin(v){
   curScrutin=v;
@@ -43,6 +49,7 @@ function renderScrutin(v){
         <div class="ghead" aria-hidden="true"><span class="gnums"><span>Pour</span><span>Contre</span><span>Abst.</span></span></div>
         <ul class="glist">${rows}</ul>
         <svg class="hemi" id="vhemi" viewBox="0 0 1000 520" role="img" aria-label="Vote de chaque député dans l'hémicycle : ${p} pour, ${c} contre, ${a} abstentions, les autres n'ont pas pris part au vote"></svg>
+        <details id="voteList" class="votelist"><summary>Voir le vote de chaque député en liste</summary>${voteListHTML(v)}</details>
         <div class="bnums hlegend"><span><i style="background:var(--pour)"></i> pour</span><span><i style="background:var(--contre)"></i> contre</span><span><i style="background:var(--abst)"></i> abstention</span><span><i style="background:var(--absent)"></i> n'a pas pris part au vote</span></div>
       </section>
     </div>

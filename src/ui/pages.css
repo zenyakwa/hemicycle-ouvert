@@ -31,3 +31,12 @@
 .lexitem dt:target,.lexitem:has(dt:focus){border-color:var(--accent)}
 .lexitem dd{margin:4px 0 0;color:var(--ink)}
 a.lex{text-decoration:underline dotted;text-underline-offset:3px}
+#hemiListBtn{margin-top:10px}
+.hemilist,.votelist{margin-top:12px;columns:2 300px;column-gap:28px}
+.votelist{columns:auto;display:block}
+.votelist summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.votelist[open]{columns:2 300px}
+.hemilist section,.votelist section{break-inside:avoid;margin-bottom:14px}
+.hemilist h3,.votelist h3{font-size:14px;margin:0 0 4px}
+.hemilist ul,.votelist ul{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:14px}
+.hemilist small,.votelist small{color:var(--muted)}

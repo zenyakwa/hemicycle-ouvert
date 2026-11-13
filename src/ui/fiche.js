@@ -75,5 +75,15 @@ function closeDep(opts){
   if(f && document.contains(f)) f.focus();
 }
 overlay.addEventListener('click',e=>{ if(e.target===overlay || e.target.closest('.sh-close')) closeDep(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !overlay.hidden) closeDep(); });
+document.addEventListener('keydown',e=>{
+  if(overlay.hidden) return;
+  if(e.key==='Escape'){ closeDep(); return; }
+  if(e.key==='Tab'){ // le focus reste dans la fiche
+    const F=[...sheet.querySelectorAll('a[href],button,input,select,[tabindex]:not([tabindex="-1"])')].filter(x=>x.offsetParent!==null);
+    if(!F.length) return;
+    const i=F.indexOf(document.activeElement);
+    if(e.shiftKey && i<=0){ e.preventDefault(); F[F.length-1].focus(); }
+    else if(!e.shiftKey && (i===-1 || i===F.length-1)){ e.preventDefault(); F[0].focus(); }
+  }
+});
 

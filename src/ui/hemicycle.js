@@ -24,6 +24,15 @@ function drawHemi(svg, colorFn, opts){
 }
 const hemi = $('#hemi');
 drawHemi(hemi, d=>G[d.g]?G[d.g].col:'#999');
+hemi.setAttribute('aria-label', "Hémicycle de l'Assemblée nationale, de gauche à droite : "+groupsOrdered.map(g=>`${g.short} ${g.n} sièges`).join(', ')+". La liste des députés est disponible avec le bouton « Afficher en liste ».");
+function renderHemiList(){
+  const sans=deps.filter(d=>!G[d.g]);
+  const blocs=groupsOrdered.map(g=>[g.l, g.members]).concat(sans.length?[['Sans groupe',sans]]:[]);
+  $('#hemiList').innerHTML = blocs.map(([l,m])=>`<section><h3>${esc(l)} · ${m.length} sièges</h3><ul>${m.slice().sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${esc(d.dep)}, ${+d.ci}${+d.ci===1?'re':'e'} circ.</small></li>`).join('')}</ul></section>`).join('');
+}
+$('#hemiListBtn').addEventListener('click',e=>{ const b=e.currentTarget, open=b.getAttribute('aria-expanded')!=='true';
+  if(open && !$('#hemiList').innerHTML) renderHemiList();
+  b.setAttribute('aria-expanded',open); b.textContent=open?'Masquer la liste':'Afficher en liste'; $('#hemiList').hidden=!open; });
 
 // tooltip + click
 const tip=$('#tip');
