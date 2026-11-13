@@ -7,7 +7,7 @@ const MOIS = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.
 const fdate = s => { const [y,m,d]=s.split('-'); return (+d)+' '+MOIS[+m-1]+' '+y; };
 const ABR = {UDDPLR:'UDR'};
 const LOGOS = D.logos||{};
-const ORDER = ['LFI-NFP','GDR','ECOS','SOC','LIOT','DEM','EPR','HOR','DR','UDDPLR','RN','NI'];
+const ORDER = ['LFI-NFP','GDR','ECOS','SOC','LIOT','DEM','EPR','HOR','DR','UDR','UDDPLR','RN','NI'];
 const G = {}; D.groups.forEach(g=>{ g.short = ABR[g.a]||g.a; G[g.id]=g; });
 const groupsOrdered = ORDER.map(a=>D.groups.find(g=>g.a===a)).filter(Boolean);
 D.groups.forEach(g=>{ if(!groupsOrdered.includes(g)) groupsOrdered.push(g); });

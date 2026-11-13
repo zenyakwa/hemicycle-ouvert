@@ -20,12 +20,11 @@ function renderGame(){
     <div class="ctx">${esc(v.k)} · ${esc(CAT[v.cat])}${v.lec?' · '+esc(v.lec):''}</div>
     <div class="answers">${btn('pour','Pour')}${btn('contre','Contre')}${btn('abstention','Abstention')}</div>
     ${answered?`<div class="verdict"><b class="${choice===pm?'ok':'ko'}">${choice===pm?'Bien vu !':'Raté.'}</b> La majorité du groupe a voté <b>${esc(pm)}</b> : ${p} pour, ${c} contre, ${a} abstentions. Au final, le texte a été <b>${esc(v.so)}</b> par l'Assemblée (${v.sy[0]} pour, ${v.sy[1]} contre).
-      <div class="links"><a class="lnk" href="${AN}/dyn/17/scrutins/${v.n}" target="_blank" rel="noopener">Voir le scrutin ${EXT}</a><a class="lnk" href="#" data-goto="${votes.indexOf(v)}">Détail par groupe</a></div></div>`:''}
+      <div class="links"><a class="lnk" href="${AN}/dyn/17/scrutins/${v.n}" target="_blank" rel="noopener">Voir le scrutin ${EXT}</a><a class="lnk" href="/scrutin/${v.n}">Détail par groupe</a></div></div>`:''}
     <div class="score"><span><b>${score.ok}</b>/ ${score.tot} bonnes réponses</span><span><b>${score.streak}</b>série</span><span><b>${score.best}</b>record</span>${answered?'<button class="next">Question suivante →</button>':''}</div>`;
 }
 $('#game').addEventListener('click',e=>{
   const n=e.target.closest('.next'); if(n){ newRound(); return; }
-  const gt=e.target.closest('[data-goto]'); if(gt){ e.preventDefault(); gotoVote(+gt.dataset.goto); return; }
   const b=e.target.closest('.answers button'); if(!b||gameState.answered) return;
   gameState.answered=true; gameState.choice=b.dataset.v;
   score.tot++; if(b.dataset.v===gameState.gx[1]){ score.ok++; score.streak++; if(score.streak>score.best){ score.best=score.streak; try{localStorage.setItem('ho-best',score.best);}catch(e){} } } else score.streak=0;
@@ -87,13 +86,12 @@ function renderQuizResult(){
     <h4 style="margin:22px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Vos réponses, question par question</h4>
     <div style="overflow-x:auto"><table class="qz-det"><thead><tr><th>Question</th><th>Vous</th><th>${esc(g.short)}</th><th>Tous les groupes (de gauche à droite)</th></tr></thead><tbody>
     ${QUIZ.map(q=>{ const v=votes[q.vi], a=qzState.ans[q.n]||'s', gp=groupPos(v,g.id);
-      return `<tr><td><a href="#" data-openvote="${q.vi}">${esc(q.q)}</a>${ib(q.vi)}</td><td><span class="pos ${a==='p'?'p':a==='c'?'c':'x'}">${ANS[a]}</span></td><td>${gp?`<span class="pos ${posCls[gp]}">${esc(gp)}</span>`:'—'}</td><td><span class="gd">${QG.map(x=>{const p=groupPos(v,x.id); return `<i title="${esc(x.short)} : ${esc(p||'absent')}" style="background:${p?posColor[p]:'var(--absent)'}"></i>`;}).join('')}</span></td></tr>`; }).join('')}
+      return `<tr><td><a href="/scrutin/${v.n}">${esc(q.q)}</a>${ib(q.vi)}</td><td><span class="pos ${a==='p'?'p':a==='c'?'c':'x'}">${ANS[a]}</span></td><td>${gp?`<span class="pos ${posCls[gp]}">${esc(gp)}</span>`:'—'}</td><td><span class="gd">${QG.map(x=>{const p=groupPos(v,x.id); return `<i title="${esc(x.short)} : ${esc(p||'absent')}" style="background:${p?posColor[p]:'var(--absent)'}"></i>`;}).join('')}</span></td></tr>`; }).join('')}
     </tbody></table></div>
   </div>`;
 }
 $('#quiz').addEventListener('click',e=>{
   if(e.target.closest('.ib')) return;
-  const ov=e.target.closest('[data-openvote]'); if(ov){ e.preventDefault(); gotoVote(+ov.dataset.openvote); return; }
   const b=e.target.closest('[data-a]');
   if(b){ const q=QUIZ[qzState.step]; qzState.ans[q.n]=b.dataset.a; qzState.step++; qzSave(); renderQuiz(); $('#view-quiz').scrollIntoView({block:'start'}); return; }
   const c=e.target.closest('[data-qz]'); if(!c) return; const k=c.dataset.qz;

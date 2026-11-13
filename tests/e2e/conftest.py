@@ -46,4 +46,4 @@ def page_any(request):
 def capture(page, etape, nom, full=True):
     d = ".captures/etape-%s" % etape
     os.makedirs(d, exist_ok=True)
-    page.screenshot(path="%s/%s-%d.png" % (d, nom, page.viewport_size["width"]), full_page=full)
+    page.screenshot(path="%s/%s-%d.png" % (d, nom, page.viewport_size["width"]), full_page=full, timeout=30000)

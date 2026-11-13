@@ -47,7 +47,7 @@ function openDep(i, opts){
   </div>
   <div class="sh-sec">
     <h4>Ses derniers votes clés</h4>
-    ${shown.length? shown.map(v=>{ const c=v.v[d.i]; const pc={p:'p',c:'c',a:'a'}[c]||'x'; return `<div class="dvote"><div><div class="d">${fdate(v.dt)} · ${esc(v.k)} · ${v.so==='adopté'?'adopté':'rejeté'}</div><a href="${AN}/dyn/17/scrutins/${v.n}" target="_blank" rel="noopener">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</div><span class="pos ${pc}">${posName[c]}</span></div>`; }).join('') : '<p class="note">Aucun vote clé depuis son arrivée.</p>'}
+    ${shown.length? shown.map(v=>{ const c=v.v[d.i]; const pc={p:'p',c:'c',a:'a'}[c]||'x'; return `<div class="dvote"><div><div class="d">${fdate(v.dt)} · ${esc(v.k)} · ${v.so==='adopté'?'adopté':'rejeté'}</div><a href="/scrutin/${v.n}">${esc(vTitle(v))}</a>${ib(votes.indexOf(v))}</div><span class="pos ${pc}">${posName[c]}</span></div>`; }).join('') : '<p class="note">Aucun vote clé depuis son arrivée.</p>'}
   </div>
   <div class="sh-sec">
     <h4>Aller plus loin sur le site de l'Assemblée</h4>

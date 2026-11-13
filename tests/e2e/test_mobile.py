@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import expect
 
-PAGES = ["/", "/votes", "/comprendre", "/depute/antoine-golliot", "/jouer/devine", "/groupes/rn", "/depute", "/jouer/groupe"]
+PAGES = ["/", "/votes", "/scrutin/9895", "/comprendre", "/depute/antoine-golliot", "/jouer/devine", "/groupes/rn", "/depute", "/jouer/groupe"]
 
 # Éléments interactifs visibles plus petits que 44 × 44 px (liens dans du texte courant exclus).
 PETITES_CIBLES = """() => {

@@ -88,19 +88,25 @@ registerView('lexique','#view-lexique',()=>({title:'Lexique', description:"Les m
 registerView('jouer','#view-jouer',()=>({title:'Jouer', description:"Deux jeux construits à partir des vrais votes de l'Assemblée nationale."}));
 registerView('devine','#view-game',()=>{ if(!gameState) newRound(); return {title:'Devine le vote', description:"Un vrai scrutin, un vrai groupe : comment la majorité du groupe a-t-elle voté ?"}; });
 registerView('quiz','#view-quiz',()=>{ renderQuiz(); return {title:'Trouve ton groupe', description:"20 vrais votes de l'Assemblée : découvrez quel groupe a voté comme vous."}; });
-registerView('introuvable','#view-introuvable',()=>({title:'Page introuvable', description:DESC_DEF}));
+let nfInfo=null;
+registerView('introuvable','#view-introuvable',()=>{
+  const i=nfInfo; nfInfo=null;
+  $('#nfMsg').innerHTML = i? `${esc(i.msg)} <a href="${esc(i.link[0])}" target="_blank" rel="noopener">${esc(i.link[1])}</a>` : "Cette adresse ne correspond à aucune page du site.";
+  return {title:'Page introuvable', description:DESC_DEF};
+});
 registerView('votes','#view-votes',({cat})=>{
   if(cat && !CAT[cat]) return null;
   const c=cat||'all';
-  if(fCat!==c || openVote!=null){ fCat=c; limit=20; openVote=null; }
+  if(fCat!==c){ fCat=c; limit=20; }
   renderVotes();
   return cat? {title:'Les décisions : '+CAT[cat], description:`Les votes clés de l'Assemblée nationale sur le thème « ${CAT[cat]} ».`}
             : {title:'Les décisions', description:"Les votes clés de l'Assemblée nationale, classés par thème, avec le vote de chaque groupe."};
 });
-registerView('scrutin','#view-votes',({n})=>{
-  const idx=votes.findIndex(v=>v.n===n); if(idx<0) return null;
-  showVoteInList(idx);
-  return {title:`Scrutin n° ${n} : ${vTitle(votes[idx])}`, description:resultSentence(votes[idx])};
+registerView('scrutin','#view-scrutin',({n})=>{
+  const v=votes.find(x=>x.n===n);
+  if(!v){ nfInfo={msg:`Ce scrutin ne fait pas partie des votes clés suivis ici (votes sur l'ensemble d'un texte, motions et scrutins solennels).`, link:[AN+'/dyn/17/scrutins/'+n, `Voir le scrutin n° ${n} sur le site de l'Assemblée`]}; return null; }
+  renderScrutin(v);
+  return {title:`Scrutin n° ${n} : ${vTitle(v)}`, description:resultSentence(v)};
 });
 registerView('depute','#view-depute',({slug})=>{
   const d=deps.find(x=>x.sl===slug); if(!d) return null;
