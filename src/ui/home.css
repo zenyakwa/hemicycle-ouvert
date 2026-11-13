@@ -1,0 +1,30 @@
+/* accueil */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.entries{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:8px 0 6px}
+.entry{display:flex;flex-direction:column;gap:4px;padding:16px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);text-decoration:none}
+.entry:hover{border-color:var(--accent)}
+.e-t{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.01em}
+.e-d{color:var(--muted);font-size:14px}
+.vcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+a.vcard.vlink{display:flex;flex-direction:column;gap:8px;padding:16px 18px;text-decoration:none}
+a.vcard.vlink:hover{border-color:var(--accent)}
+.vlink .vmeta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--muted)}
+.vlink .vtitle{font-weight:700;font-size:16px;line-height:1.3}
+.vbref{font-size:14px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.vbref b{color:var(--ink)}
+.vres{font-size:13.5px;font-weight:600}
+.themechips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px}
+.themechips .lbl{font-size:13px;color:var(--muted);margin-right:4px}
+.themechips a{display:inline-flex;align-items:center;min-height:36px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);text-decoration:none;font-size:13.5px;font-weight:600}
+.gbar{display:flex;height:26px;border-radius:8px;overflow:hidden;gap:2px;background:var(--line)}
+.gbar .seg{display:block;min-width:3px}
+.gbar-legend{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-wrap:wrap;gap:4px 14px}
+.gbar-legend a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;font-size:13.5px;min-height:32px}
+.gbar-legend .sw{width:11px;height:11px;border-radius:50%;display:inline-block}
+.gbar-legend .n{color:var(--muted);font-weight:400}
+.gbar-maj{margin:8px 0 0;font-size:14px}
+.gbar-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 0}
+.gbar-links a{font-weight:600}
+.btn.mobile-only{display:none}
+@media (max-width:760px){.btn.mobile-only{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:14px;text-decoration:none;width:100%}}
+.block.play{border-top:1px dashed var(--line);padding-top:18px}
