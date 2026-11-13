@@ -40,7 +40,8 @@ function groupBadge(g,px){
 }
 function initials(d){ return (d.p[0]||'')+(d.n.replace(/^(de |d'|le |la |du )/i,'')[0]||''); }
 function avatar(d,cls){ const g=G[d.g]; return `<span class="av ${cls||''}" style="background:${g?g.col:'#888'}">${esc(initials(d))}</span>`; }
-function textColorOn(hex){ const h=hex.replace('#',''); const r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (r*299+g*587+b*114)/1000>150?'#111':'#fff'; }
+function relLum(hex){ const h=hex.replace('#',''); return [0,2,4].map(i=>{ const x=parseInt(h.substr(i,2),16)/255; return x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4); }).reduce((a,x,i)=>a+x*[0.2126,0.7152,0.0722][i],0); }
+function textColorOn(hex){ const L=relLum(hex); return (1.05)/(L+0.05) >= (L+0.05)/(relLum('#111111')+0.05) ? '#fff' : '#111'; } // la couleur de texte la plus contrastée
 function circo(d){ const n=+d.ci; return `${d.dep} (${d.nd}) · ${n}${n===1?'re':'e'} circ.`; }
 const DEP_DU=['Bas-Rhin','Calvados','Cantal','Cher','Doubs','Finistère','Gard','Gers','Haut-Rhin','Jura','Loir-et-Cher','Loiret','Lot','Lot-et-Garonne','Morbihan','Nord','Pas-de-Calais','Puy-de-Dôme','Rhône','Tarn','Tarn-et-Garonne','Territoire de Belfort',"Val-d'Oise",'Val-de-Marne','Var','Vaucluse'];
 const DEP_SANS=['Paris','Mayotte','Saint-Pierre-et-Miquelon','Wallis-et-Futuna','Saint-Barthélemy et Saint-Martin'];

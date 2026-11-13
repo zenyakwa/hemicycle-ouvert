@@ -8,9 +8,9 @@
 .answers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
 @media (max-width:480px){.answers{grid-template-columns:1fr}}
 .answers button{padding:14px 10px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);cursor:pointer;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.05em}
-.answers button[data-v="pour"]:hover{border-color:var(--pour);color:var(--pour)}
-.answers button[data-v="contre"]:hover{border-color:var(--contre);color:var(--contre)}
-.answers button[data-v="abstention"]:hover{border-color:var(--abst);color:var(--abst)}
+.answers button[data-v="pour"]:hover{border-color:var(--pour);color:var(--pour-ink)}
+.answers button[data-v="contre"]:hover{border-color:var(--contre);color:var(--contre-ink)}
+.answers button[data-v="abstention"]:hover{border-color:var(--abst);color:var(--abst-ink)}
 .answers button.right{border-color:var(--pour);background:color-mix(in srgb,var(--pour) 14%,var(--surface))}
 .answers button.wrong{border-color:var(--contre);background:color-mix(in srgb,var(--contre) 12%,var(--surface))}
 .verdict{margin-top:16px;padding:14px;border-radius:10px;background:var(--surface-2);font-size:14px}

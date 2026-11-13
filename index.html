@@ -13,6 +13,7 @@
 :root{
   --bg:#EEF1F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#101A2E; --muted:#5A6479; --line:#D6DCE6;
   --accent:#A51D35; --accent-ink:#FFFFFF; --pour:#23784A; --contre:#B3261E; --abst:#C07F0A; --absent:#B9C1CE;
+  --pour-ink:#1F6941; --contre-ink:#AB241D; --abst-ink:#835707;
   --shadow:0 1px 2px rgba(16,26,46,.06),0 8px 24px rgba(16,26,46,.06);
   --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -22,14 +23,16 @@
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --bg:#0B111E; --surface:#141C2C; --surface-2:#1A2336; --ink:#E7EBF3; --muted:#98A2B7; --line:#27324A;
-    --accent:#E2566C; --accent-ink:#1A0006; --pour:#4CC283; --contre:#F0605A; --abst:#E9AE3C; --absent:#46516A;
+    --accent:#E35F74; --accent-ink:#1A0006; --pour:#4CC283; --contre:#F0605A; --abst:#E9AE3C; --absent:#46516A;
+    --pour-ink:#4CC283; --contre-ink:#F37A75; --abst-ink:#E9AE3C;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#0B111E; --surface:#141C2C; --surface-2:#1A2336; --ink:#E7EBF3; --muted:#98A2B7; --line:#27324A;
-  --accent:#E2566C; --accent-ink:#1A0006; --pour:#4CC283; --contre:#F0605A; --abst:#E9AE3C; --absent:#46516A;
+  --accent:#E35F74; --accent-ink:#1A0006; --pour:#4CC283; --contre:#F0605A; --abst:#E9AE3C; --absent:#46516A;
+    --pour-ink:#4CC283; --contre-ink:#F37A75; --abst-ink:#E9AE3C;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
 }
 *{box-sizing:border-box}
@@ -139,9 +142,9 @@ select,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);back
 
 /* position pills */
 .pos{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
-.pos.p{background:color-mix(in srgb,var(--pour) 16%,transparent);color:var(--pour)}
-.pos.c{background:color-mix(in srgb,var(--contre) 16%,transparent);color:var(--contre)}
-.pos.a{background:color-mix(in srgb,var(--abst) 18%,transparent);color:var(--abst)}
+.pos.p{background:color-mix(in srgb,var(--pour) 16%,transparent);color:var(--pour-ink)}
+.pos.c{background:color-mix(in srgb,var(--contre) 16%,transparent);color:var(--contre-ink)}
+.pos.a{background:color-mix(in srgb,var(--abst) 18%,transparent);color:var(--abst-ink)}
 .pos.n,.pos.x{background:var(--surface-2);color:var(--muted)}
 
 /* votes */
@@ -222,9 +225,9 @@ select,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);back
 .answers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
 @media (max-width:480px){.answers{grid-template-columns:1fr}}
 .answers button{padding:14px 10px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);cursor:pointer;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.05em}
-.answers button[data-v="pour"]:hover{border-color:var(--pour);color:var(--pour)}
-.answers button[data-v="contre"]:hover{border-color:var(--contre);color:var(--contre)}
-.answers button[data-v="abstention"]:hover{border-color:var(--abst);color:var(--abst)}
+.answers button[data-v="pour"]:hover{border-color:var(--pour);color:var(--pour-ink)}
+.answers button[data-v="contre"]:hover{border-color:var(--contre);color:var(--contre-ink)}
+.answers button[data-v="abstention"]:hover{border-color:var(--abst);color:var(--abst-ink)}
 .answers button.right{border-color:var(--pour);background:color-mix(in srgb,var(--pour) 14%,var(--surface))}
 .answers button.wrong{border-color:var(--contre);background:color-mix(in srgb,var(--contre) 12%,var(--surface))}
 .verdict{margin-top:16px;padding:14px;border-radius:10px;background:var(--surface-2);font-size:14px}
@@ -382,7 +385,7 @@ a.vcard.vlink:hover{border-color:var(--accent)}
 .gsig{font-weight:800;font-size:13px}
 .gname{color:var(--muted);font-size:13.5px;min-width:0}
 .gpos{font-weight:700;font-size:13.5px}
-.gpos.p{color:var(--pour)} .gpos.c{color:var(--contre)} .gpos.a{color:var(--abst)}
+.gpos.p{color:var(--pour-ink)} .gpos.c{color:var(--contre-ink)} .gpos.a{color:var(--abst-ink)}
 .gnums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:right;font-size:13px}
 @media (max-width:640px){
   .ghead{display:none}
@@ -688,7 +691,8 @@ function groupBadge(g,px){
 }
 function initials(d){ return (d.p[0]||'')+(d.n.replace(/^(de |d'|le |la |du )/i,'')[0]||''); }
 function avatar(d,cls){ const g=G[d.g]; return `<span class="av ${cls||''}" style="background:${g?g.col:'#888'}">${esc(initials(d))}</span>`; }
-function textColorOn(hex){ const h=hex.replace('#',''); const r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (r*299+g*587+b*114)/1000>150?'#111':'#fff'; }
+function relLum(hex){ const h=hex.replace('#',''); return [0,2,4].map(i=>{ const x=parseInt(h.substr(i,2),16)/255; return x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4); }).reduce((a,x,i)=>a+x*[0.2126,0.7152,0.0722][i],0); }
+function textColorOn(hex){ const L=relLum(hex); return (1.05)/(L+0.05) >= (L+0.05)/(relLum('#111111')+0.05) ? '#fff' : '#111'; } // la couleur de texte la plus contrastée
 function circo(d){ const n=+d.ci; return `${d.dep} (${d.nd}) · ${n}${n===1?'re':'e'} circ.`; }
 const DEP_DU=['Bas-Rhin','Calvados','Cantal','Cher','Doubs','Finistère','Gard','Gers','Haut-Rhin','Jura','Loir-et-Cher','Loiret','Lot','Lot-et-Garonne','Morbihan','Nord','Pas-de-Calais','Puy-de-Dôme','Rhône','Tarn','Tarn-et-Garonne','Territoire de Belfort',"Val-d'Oise",'Val-de-Marne','Var','Vaucluse'];
 const DEP_SANS=['Paris','Mayotte','Saint-Pierre-et-Miquelon','Wallis-et-Futuna','Saint-Barthélemy et Saint-Martin'];

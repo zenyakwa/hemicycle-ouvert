@@ -92,8 +92,8 @@ select,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);back
 
 /* position pills */
 .pos{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
-.pos.p{background:color-mix(in srgb,var(--pour) 16%,transparent);color:var(--pour)}
-.pos.c{background:color-mix(in srgb,var(--contre) 16%,transparent);color:var(--contre)}
-.pos.a{background:color-mix(in srgb,var(--abst) 18%,transparent);color:var(--abst)}
+.pos.p{background:color-mix(in srgb,var(--pour) 16%,transparent);color:var(--pour-ink)}
+.pos.c{background:color-mix(in srgb,var(--contre) 16%,transparent);color:var(--contre-ink)}
+.pos.a{background:color-mix(in srgb,var(--abst) 18%,transparent);color:var(--abst-ink)}
 .pos.n,.pos.x{background:var(--surface-2);color:var(--muted)}
 

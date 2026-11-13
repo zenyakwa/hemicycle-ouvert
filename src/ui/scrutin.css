@@ -20,7 +20,7 @@
 .gsig{font-weight:800;font-size:13px}
 .gname{color:var(--muted);font-size:13.5px;min-width:0}
 .gpos{font-weight:700;font-size:13.5px}
-.gpos.p{color:var(--pour)} .gpos.c{color:var(--contre)} .gpos.a{color:var(--abst)}
+.gpos.p{color:var(--pour-ink)} .gpos.c{color:var(--contre-ink)} .gpos.a{color:var(--abst-ink)}
 .gnums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:right;font-size:13px}
 @media (max-width:640px){
   .ghead{display:none}
