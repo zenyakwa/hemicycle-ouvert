@@ -8,28 +8,62 @@ __CSS__
 
 <div class="wrap">
   <header class="top">
-    <div class="brand">
-      <h1>Hémicycle <span>ouvert</span></h1>
-      <p>Qui siège à l'Assemblée nationale, qui vote quoi, et ce qui a été adopté. Cliquez sur un groupe, un siège ou un vote.</p>
-    </div>
+    <a class="brand" href="/">
+      <span class="brand-title">Hémicycle <span>ouvert</span></span>
+      <span class="brand-sub">Qui siège à l'Assemblée nationale, qui vote quoi, et ce qui a été adopté.</span>
+    </a>
     <div class="fresh" id="fresh"></div>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Sections">
-    <button role="tab" id="tab-hemi" aria-selected="true" data-tab="hemi">L'hémicycle</button>
-    <button role="tab" id="tab-votes" aria-selected="false" data-tab="votes">Les votes</button>
-    <button role="tab" id="tab-game" aria-selected="false" data-tab="game">Devine le vote</button>
-    <button role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">Trouve ton groupe</button>
+  <nav class="mainnav" aria-label="Navigation principale">
+    <a href="/depute" data-nav="depute">Mon député</a>
+    <a href="/votes" data-nav="votes">Les décisions</a>
+    <a href="/comprendre" data-nav="comprendre">Comprendre</a>
+    <a href="/jouer" data-nav="jouer">Jouer</a>
   </nav>
 
-  <main>
-    <div id="view-hemi">
+  <main id="main">
+    <div id="view-home" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Ce que fait votre Assemblée, en clair.</h1>
+        <p class="lead" id="homeFresh"></p>
+        <label class="biglabel" for="qHome">Trouver mon député</label>
+        <div class="search search-big" data-search="qHome">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="qHome" type="search" placeholder="Nom, ville ou code postal" autocomplete="off" aria-label="Trouver mon député">
+            <div class="results" id="qHome-results" hidden></div>
+          </div>
+        <p class="sub">Ou parcourir <a href="/depute">par département</a> · <a href="/depute">la liste des <span class="ndeps"></span> députés</a></p>
+      </section>
+    </div>
+
+    <div id="view-depute" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Mon député</h1>
+        <label class="biglabel" for="qDep">Trouver mon député</label>
+        <div class="search search-big" data-search="qDep">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="qDep" type="search" placeholder="Nom, ville ou code postal" autocomplete="off" aria-label="Trouver mon député">
+            <div class="results" id="qDep-results" hidden></div>
+          </div>
+      </section>
+      <section class="block" aria-labelledby="parDep">
+        <div class="block-h"><h2 id="parDep">Par département</h2><p><span class="ndeps"></span> députés en exercice</p></div>
+        <div class="deplist" id="deplist"></div>
+      </section>
+    </div>
+
+    <div id="view-hemi" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Comprendre l'Assemblée</h1>
+        <p class="lead">Les 577 sièges de l'hémicycle, les groupes politiques et les mots de la procédure parlementaire. Voir aussi <a href="/groupes">les 12 groupes</a> et <a href="/lexique">le lexique</a>.</p>
+      </section>
       <div class="hemi-card">
         <div class="hemi-head">
           <h2>577 sièges, 12 groupes</h2>
           <div class="search">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="q" type="search" placeholder="Un nom, un département, un n° (ex. 69)…" autocomplete="off" aria-label="Rechercher un député">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="q" type="search" placeholder="Un nom, un département, un n° (ex. 69)…" autocomplete="off" aria-label="Rechercher un député dans l'hémicycle">
             <div class="results" id="results" hidden></div>
           </div>
         </div>
@@ -38,15 +72,18 @@ __CSS__
           <svg class="hemi" id="hemi" viewBox="0 0 1000 520" role="img" aria-label="Hémicycle de l'Assemblée nationale"></svg>
           <div class="hemi-center"><div class="big" id="hc-big">577</div><div class="lbl" id="hc-lbl">députés</div></div>
         </div>
-        <p class="hint">Survolez un siège pour voir le député, cliquez pour ouvrir sa fiche. Les groupes sont placés de gauche à droite comme dans l'hémicycle.</p>
+        <p class="hint" id="hemiHint">Survolez un siège pour voir le député, cliquez pour ouvrir sa fiche. Les groupes sont placés de gauche à droite comme dans l'hémicycle.</p>
       </div>
-      <section class="block" id="groupsArea"></section>
     </div>
 
-    <div id="view-votes" hidden>
+    <div id="view-groupes" class="view" hidden>
+      <section class="block" id="groupsArea" style="margin-top:0"></section>
+    </div>
+
+    <div id="view-votes" class="view" hidden>
       <section class="block" style="margin-top:0">
         <div class="block-h">
-          <h2>Les votes qui comptent</h2>
+          <h1 tabindex="-1">Les décisions</h1>
           <p id="vcount"></p>
         </div>
         <div class="cats" id="cats"></div>
@@ -66,7 +103,7 @@ __CSS__
             <option>Résolution</option>
           </select>
           <div class="search" style="max-width:300px">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
             <input id="vq" type="search" placeholder="Chercher un texte…" aria-label="Chercher un texte">
           </div>
         </div>
@@ -75,22 +112,55 @@ __CSS__
       </section>
     </div>
 
-    <div id="view-game" hidden>
+    <div id="view-jouer" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Jouer</h1>
+        <p class="lead">Deux jeux construits à partir des vrais votes de l'Assemblée.</p>
+      </section>
+      <div class="playcards">
+        <a class="playcard" href="/jouer/devine"><span class="pc-t">Devine le vote</span><span class="pc-d">Un vrai scrutin, un vrai groupe : comment la majorité du groupe a-t-elle voté ?</span></a>
+        <a class="playcard" href="/jouer/groupe"><span class="pc-t">Trouve ton groupe</span><span class="pc-d">20 vrais votes : répondez, et découvrez quel groupe a voté comme vous.</span></a>
+      </div>
+    </div>
+
+    <div id="view-game" class="view" hidden>
       <section class="block" style="margin-top:0">
         <div class="block-h">
-          <h2>Devine le vote</h2>
+          <h1 tabindex="-1">Devine le vote</h1>
           <p>Un vrai scrutin, un vrai groupe. Comment la majorité du groupe a-t-elle voté ?</p>
         </div>
         <div class="game" id="game"></div>
       </section>
     </div>
-    <div id="view-quiz" hidden>
+    <div id="view-quiz" class="view" hidden>
       <section class="block" style="margin-top:0">
         <div class="block-h">
-          <h2>Trouve ton groupe</h2>
+          <h1 tabindex="-1">Trouve ton groupe</h1>
           <p>20 vrais votes de l'Assemblée. Répondez, et découvrez quel groupe a voté comme vous.</p>
         </div>
         <div id="quiz"></div>
+      </section>
+    </div>
+
+    <div id="view-lexique" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Lexique</h1>
+        <p class="lead">Les mots de la procédure parlementaire employés sur ce site.</p>
+      </section>
+      <div id="lexique"></div>
+    </div>
+
+    <div id="view-introuvable" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Page introuvable</h1>
+        <p class="lead" id="nfMsg">Cette adresse ne correspond à aucune page du site.</p>
+        <label class="biglabel" for="qNf">Trouver mon député</label>
+        <div class="search search-big" data-search="qNf">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="qNf" type="search" placeholder="Nom, ville ou code postal" autocomplete="off" aria-label="Trouver mon député">
+            <div class="results" id="qNf-results" hidden></div>
+          </div>
+        <p class="sub">Ou aller à : <a href="/">l'accueil</a> · <a href="/votes">les décisions</a> · <a href="/comprendre">comprendre l'Assemblée</a> · <a href="/jouer">jouer</a></p>
       </section>
     </div>
   </main>

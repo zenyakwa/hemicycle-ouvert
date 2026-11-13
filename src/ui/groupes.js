@@ -3,21 +3,22 @@ let selGroup=null;
 function renderLegend(){
   $('#legend').innerHTML = groupsOrdered.map(g=>`<button class="chip" aria-pressed="${selGroup===g.id}" data-g="${g.id}" title="${esc(g.l)}"><span class="sw" style="background:${g.col}"></span>${esc(g.short)}<span class="n">${g.n}</span></button>`).join('');
 }
-$('#legend').addEventListener('click',e=>{ const b=e.target.closest('[data-g]'); if(!b) return; selectGroup(selGroup===b.dataset.g?null:b.dataset.g); });
+$('#legend').addEventListener('click',e=>{ const b=e.target.closest('[data-g]'); if(!b) return; selectGroup(selGroup===b.dataset.g?null:b.dataset.g, true); });
 function highlight(){
   hemi.querySelectorAll('circle').forEach(c=>{ const d=deps[+c.dataset.i]; c.classList.toggle('dim', !!selGroup && d.g!==selGroup); c.classList.remove('hit'); });
   const g=G[selGroup];
   $('#hc-big').textContent = g? g.n : 577;
   $('#hc-lbl').textContent = g? `sièges · ${(100*g.n/577).toFixed(1).replace('.',',')} %` : 'députés';
 }
-function selectGroup(id){
+function selectGroup(id, legendOnly){
   selGroup=id; renderLegend(); highlight();
+  if(legendOnly) return;
   id? renderGroup(G[id]) : renderOverview();
 }
 function renderOverview(){
   const maj=289;
   $('#groupsArea').innerHTML = `
-  <div class="block-h"><h2>Les groupes politiques</h2><p>Majorité absolue : <b class="num">${maj}</b> sièges. Aucun groupe ne l'atteint seul.</p></div>
+  <div class="block-h"><h1 tabindex="-1">Les groupes politiques</h1><p>Majorité absolue : <b class="num">${maj}</b> sièges. Aucun groupe ne l'atteint seul.</p></div>
   <div class="gcards">${groupsOrdered.map(g=>`
     <button class="gcard" data-g="${g.id}">
       <span class="band" style="background:${g.col}"></span>
@@ -32,11 +33,11 @@ function renderOverview(){
   <p class="hint" style="margin-top:10px">Cohésion : part des votes clés où le député a voté comme la majorité de son groupe.</p>`;
 }
 $('#groupsArea').addEventListener('click',e=>{
-  const g=e.target.closest('.gcard'); if(g){ selectGroup(g.dataset.g); return; }
-  const m=e.target.closest('[data-dep]'); if(m){ openDep(+m.dataset.dep); return; }
-  if(e.target.closest('.back')) selectGroup(null);
+  const g=e.target.closest('.gcard'); if(g){ navigate(groupPath(G[g.dataset.g])); return; }
+  const m=e.target.closest('[data-dep]'); if(m){ e.preventDefault(); openDep(+m.dataset.dep); return; }
+  if(e.target.closest('.back')){ navigate('/groupes'); return; }
   const sb=e.target.closest('[data-sort]'); if(sb){ memberSort=sb.dataset.sort; renderGroup(G[selGroup]); }
-  const vv=e.target.closest('[data-openvote]'); if(vv){ gotoVote(+vv.dataset.openvote); }
+  const vv=e.target.closest('[data-openvote]'); if(vv){ e.preventDefault(); gotoVote(+vv.dataset.openvote); }
 });
 let memberSort='nom';
 function renderGroup(g){
@@ -48,7 +49,7 @@ function renderGroup(g){
   $('#groupsArea').innerHTML = `
   <div class="gpanel">
     <div class="gp-top"><span class="band" style="background:${g.col}"></span>
-      <div style="padding-left:6px;display:flex;gap:14px;align-items:center">${groupBadge(g,56)}<div><h2>${esc(g.short)}</h2><div class="full">${esc(g.l)}${g.pres?` · présidé par <a href="#" data-dep="${g.pres.i}" style="font-weight:600">${esc(g.pres.p+' '+g.pres.n)}</a>`:''}</div></div></div>
+      <div style="padding-left:6px;display:flex;gap:14px;align-items:center">${groupBadge(g,56)}<div><h1 tabindex="-1">${esc(g.short)}</h1><div class="full">${esc(g.l)}${g.pres?` · présidé par <a href="#" data-dep="${g.pres.i}" style="font-weight:600">${esc(g.pres.p+' '+g.pres.n)}</a>`:''}</div></div></div>
       <button class="back">← Tous les groupes</button>
     </div>
     <div class="stats">

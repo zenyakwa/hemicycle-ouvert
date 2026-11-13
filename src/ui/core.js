@@ -42,6 +42,16 @@ function initials(d){ return (d.p[0]||'')+(d.n.replace(/^(de |d'|le |la |du )/i,
 function avatar(d,cls){ const g=G[d.g]; return `<span class="av ${cls||''}" style="background:${g?g.col:'#888'}">${esc(initials(d))}</span>`; }
 function textColorOn(hex){ const h=hex.replace('#',''); const r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (r*299+g*587+b*114)/1000>150?'#111':'#fff'; }
 function circo(d){ const n=+d.ci; return `${d.dep} (${d.nd}) · ${n}${n===1?'re':'e'} circ.`; }
+const DEP_DU=['Bas-Rhin','Calvados','Cantal','Cher','Doubs','Finistère','Gard','Gers','Haut-Rhin','Jura','Loir-et-Cher','Loiret','Lot','Lot-et-Garonne','Morbihan','Nord','Pas-de-Calais','Puy-de-Dôme','Rhône','Tarn','Tarn-et-Garonne','Territoire de Belfort',"Val-d'Oise",'Val-de-Marne','Var','Vaucluse'];
+const DEP_SANS=['Paris','Mayotte','Saint-Pierre-et-Miquelon','Wallis-et-Futuna','Saint-Barthélemy et Saint-Martin'];
+function deDep(n){
+  if(DEP_SANS.includes(n)) return 'de '+n;
+  if(n==='Réunion') return 'de La Réunion';
+  if(DEP_DU.includes(n)) return 'du '+n;
+  if(/^(Hauts-|Hautes-|Alpes-|Bouches-|Côtes-|Deux-|Pyrénées-|Français |Ardennes|Landes|Vosges|Yvelines)/.test(n)) return 'des '+n;
+  if(/^[AEÉIOUYH]/.test(n) && !/^Haute-/.test(n)) return "de l'"+n;
+  return 'de la '+n;
+}
 function vTitle(v){ return v.dos || v.t.replace(/^l['’]ensemble (de la |du |des )?/i,'').replace(/\s*\([^)]*\)\.?$/,''); }
 
 

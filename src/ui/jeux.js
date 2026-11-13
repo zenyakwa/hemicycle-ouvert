@@ -101,8 +101,7 @@ $('#quiz').addEventListener('click',e=>{
   if(k==='reset'||k==='restart'){ qzState={step:0,ans:{}}; }
   if(k==='prev') qzState.step=Math.max(0,qzState.step-1);
   if(k==='skip'){ qzState.ans[QUIZ[qzState.step].n]='s'; qzState.step++; }
-  if(k==='group'){ showTab('hemi'); selectGroup(c.dataset.g); $('#view-hemi').scrollIntoView({block:'start'}); return; }
+  if(k==='group'){ navigate(groupPath(G[c.dataset.g])); return; }
   qzSave(); renderQuiz();
 });
 
-let startTab='hemi'; try{ startTab=localStorage.getItem('ho-tab')||'hemi'; }catch(e){}

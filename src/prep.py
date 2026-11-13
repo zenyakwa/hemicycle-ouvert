@@ -174,8 +174,8 @@ def build_data(root=ROOT, log=lambda *a: None):
     return out
 
 
-UI_CSS=['base.css','layout.css','votes.css','fiche.css','jeux.css']
-UI_JS=['core.js','popups.js','hemicycle.js','groupes.js','recherche.js','fiche.js','votes.js','jeux.js','start.js']
+UI_CSS=['base.css','layout.css','votes.css','fiche.css','jeux.css','pages.css']
+UI_JS=['core.js','popups.js','hemicycle.js','groupes.js','recherche.js','composants.js','fiche.js','votes.js','jeux.js','router.js','start.js']
 
 
 def ui_bundle(root, names):

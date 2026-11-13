@@ -43,14 +43,15 @@ button{font:inherit;color:inherit}
 
 /* header */
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-.brand h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,54px);line-height:.9;letter-spacing:.01em;margin:0;text-transform:uppercase}
-.brand h1 span{color:var(--accent)}
-.brand p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.brand{text-decoration:none;color:inherit;display:block}
+.brand-title{display:block;font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,54px);line-height:.9;letter-spacing:.01em;margin:0;text-transform:uppercase}
+.brand-title span{color:var(--accent)}
+.brand-sub{display:block;margin:6px 0 0;color:var(--muted);max-width:60ch}
 .fresh{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:2px;text-align:right}
 .fresh b{color:var(--ink);font-weight:600}
-nav.tabs{display:flex;gap:4px;margin:16px 0 20px;flex-wrap:wrap}
-nav.tabs button{border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px}
-nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mainnav{display:flex;gap:4px;margin:16px 0 20px;flex-wrap:wrap}
+.mainnav a{text-decoration:none;display:inline-flex;align-items:center;gap:8px;min-height:44px;border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px}
+.mainnav a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
 /* hemicycle */
 .hemi-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 18px 10px;box-shadow:var(--shadow)}
@@ -84,7 +85,7 @@ svg.hemi circle.hit{stroke:var(--ink);stroke-width:2}
 /* groups overview */
 section.block{margin-top:26px}
 .block-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.block-h h2{font-family:var(--display);font-weight:800;font-size:28px;margin:0;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.block-h h1,.block-h h2{font-family:var(--display);font-weight:800;font-size:28px;margin:0;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
 .block-h p{margin:0;color:var(--muted);font-size:13.5px}
 .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;display:grid;gap:8px;position:relative;overflow:hidden}
@@ -104,7 +105,7 @@ section.block{margin-top:26px}
 .gpanel{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
 .gp-top{padding:18px 20px;display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:relative}
 .gp-top .band{position:absolute;left:0;top:0;bottom:0;width:8px}
-.gp-top h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:.95;margin:0;text-transform:uppercase}
+.gp-top h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:.95;margin:0;text-transform:uppercase}
 .gp-top .full{color:var(--muted);font-size:14px}
 .back{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line)}
@@ -283,6 +284,31 @@ select,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);back
 .qz-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 6px}
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);display:grid;gap:4px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* pages : en-têtes de vue, grande recherche, listes */
+.view>h1:focus,.view h1:focus{outline:none}
+.pagehead{padding:8px 0 18px}
+.pagehead h1{font-family:var(--display);font-weight:800;font-size:clamp(32px,5.4vw,52px);line-height:.95;text-transform:uppercase;letter-spacing:.01em;margin:0 0 10px;text-wrap:balance}
+.pagehead .lead{margin:0 0 16px;color:var(--muted);max-width:62ch}
+.pagehead .lead b{color:var(--ink)}
+.biglabel{display:block;font-weight:700;font-size:15px;margin:0 0 6px}
+.search-big{max-width:640px}
+.search-big input{padding:14px 14px 14px 42px;font-size:17px;border-radius:12px;background:var(--surface)}
+.search-big svg{left:14px;width:18px;height:18px}
+.pagehead .sub{margin:10px 0 0;color:var(--muted);font-size:14px}
+.results a{display:flex;gap:10px;align-items:center;width:100%;text-decoration:none;padding:8px 12px;min-height:44px}
+.results a:hover,.results a:focus{background:var(--surface-2)}
+.deplist{columns:3 260px;column-gap:28px}
+.dgrp{break-inside:avoid;margin:0 0 16px}
+.dgrp h3{font-size:14px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.06em}
+.dgrp ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.dgrp li{font-size:14px}
+.dgrp li a{font-weight:600}
+.dgrp small{color:var(--muted)}
+.playcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.playcard{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:14px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);text-decoration:none}
+.playcard:hover{border-color:var(--accent)}
+.pc-t{font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase}
+.pc-d{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -290,28 +316,62 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
 
 <div class="wrap">
   <header class="top">
-    <div class="brand">
-      <h1>Hémicycle <span>ouvert</span></h1>
-      <p>Qui siège à l'Assemblée nationale, qui vote quoi, et ce qui a été adopté. Cliquez sur un groupe, un siège ou un vote.</p>
-    </div>
+    <a class="brand" href="/">
+      <span class="brand-title">Hémicycle <span>ouvert</span></span>
+      <span class="brand-sub">Qui siège à l'Assemblée nationale, qui vote quoi, et ce qui a été adopté.</span>
+    </a>
     <div class="fresh" id="fresh"></div>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Sections">
-    <button role="tab" id="tab-hemi" aria-selected="true" data-tab="hemi">L'hémicycle</button>
-    <button role="tab" id="tab-votes" aria-selected="false" data-tab="votes">Les votes</button>
-    <button role="tab" id="tab-game" aria-selected="false" data-tab="game">Devine le vote</button>
-    <button role="tab" id="tab-quiz" aria-selected="false" data-tab="quiz">Trouve ton groupe</button>
+  <nav class="mainnav" aria-label="Navigation principale">
+    <a href="/depute" data-nav="depute">Mon député</a>
+    <a href="/votes" data-nav="votes">Les décisions</a>
+    <a href="/comprendre" data-nav="comprendre">Comprendre</a>
+    <a href="/jouer" data-nav="jouer">Jouer</a>
   </nav>
 
-  <main>
-    <div id="view-hemi">
+  <main id="main">
+    <div id="view-home" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Ce que fait votre Assemblée, en clair.</h1>
+        <p class="lead" id="homeFresh"></p>
+        <label class="biglabel" for="qHome">Trouver mon député</label>
+        <div class="search search-big" data-search="qHome">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="qHome" type="search" placeholder="Nom, ville ou code postal" autocomplete="off" aria-label="Trouver mon député">
+            <div class="results" id="qHome-results" hidden></div>
+          </div>
+        <p class="sub">Ou parcourir <a href="/depute">par département</a> · <a href="/depute">la liste des <span class="ndeps"></span> députés</a></p>
+      </section>
+    </div>
+
+    <div id="view-depute" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Mon député</h1>
+        <label class="biglabel" for="qDep">Trouver mon député</label>
+        <div class="search search-big" data-search="qDep">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="qDep" type="search" placeholder="Nom, ville ou code postal" autocomplete="off" aria-label="Trouver mon député">
+            <div class="results" id="qDep-results" hidden></div>
+          </div>
+      </section>
+      <section class="block" aria-labelledby="parDep">
+        <div class="block-h"><h2 id="parDep">Par département</h2><p><span class="ndeps"></span> députés en exercice</p></div>
+        <div class="deplist" id="deplist"></div>
+      </section>
+    </div>
+
+    <div id="view-hemi" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Comprendre l'Assemblée</h1>
+        <p class="lead">Les 577 sièges de l'hémicycle, les groupes politiques et les mots de la procédure parlementaire. Voir aussi <a href="/groupes">les 12 groupes</a> et <a href="/lexique">le lexique</a>.</p>
+      </section>
       <div class="hemi-card">
         <div class="hemi-head">
           <h2>577 sièges, 12 groupes</h2>
           <div class="search">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="q" type="search" placeholder="Un nom, un département, un n° (ex. 69)…" autocomplete="off" aria-label="Rechercher un député">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="q" type="search" placeholder="Un nom, un département, un n° (ex. 69)…" autocomplete="off" aria-label="Rechercher un député dans l'hémicycle">
             <div class="results" id="results" hidden></div>
           </div>
         </div>
@@ -320,15 +380,18 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
           <svg class="hemi" id="hemi" viewBox="0 0 1000 520" role="img" aria-label="Hémicycle de l'Assemblée nationale"></svg>
           <div class="hemi-center"><div class="big" id="hc-big">577</div><div class="lbl" id="hc-lbl">députés</div></div>
         </div>
-        <p class="hint">Survolez un siège pour voir le député, cliquez pour ouvrir sa fiche. Les groupes sont placés de gauche à droite comme dans l'hémicycle.</p>
+        <p class="hint" id="hemiHint">Survolez un siège pour voir le député, cliquez pour ouvrir sa fiche. Les groupes sont placés de gauche à droite comme dans l'hémicycle.</p>
       </div>
-      <section class="block" id="groupsArea"></section>
     </div>
 
-    <div id="view-votes" hidden>
+    <div id="view-groupes" class="view" hidden>
+      <section class="block" id="groupsArea" style="margin-top:0"></section>
+    </div>
+
+    <div id="view-votes" class="view" hidden>
       <section class="block" style="margin-top:0">
         <div class="block-h">
-          <h2>Les votes qui comptent</h2>
+          <h1 tabindex="-1">Les décisions</h1>
           <p id="vcount"></p>
         </div>
         <div class="cats" id="cats"></div>
@@ -348,7 +411,7 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
             <option>Résolution</option>
           </select>
           <div class="search" style="max-width:300px">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
             <input id="vq" type="search" placeholder="Chercher un texte…" aria-label="Chercher un texte">
           </div>
         </div>
@@ -357,22 +420,55 @@ footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-si
       </section>
     </div>
 
-    <div id="view-game" hidden>
+    <div id="view-jouer" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Jouer</h1>
+        <p class="lead">Deux jeux construits à partir des vrais votes de l'Assemblée.</p>
+      </section>
+      <div class="playcards">
+        <a class="playcard" href="/jouer/devine"><span class="pc-t">Devine le vote</span><span class="pc-d">Un vrai scrutin, un vrai groupe : comment la majorité du groupe a-t-elle voté ?</span></a>
+        <a class="playcard" href="/jouer/groupe"><span class="pc-t">Trouve ton groupe</span><span class="pc-d">20 vrais votes : répondez, et découvrez quel groupe a voté comme vous.</span></a>
+      </div>
+    </div>
+
+    <div id="view-game" class="view" hidden>
       <section class="block" style="margin-top:0">
         <div class="block-h">
-          <h2>Devine le vote</h2>
+          <h1 tabindex="-1">Devine le vote</h1>
           <p>Un vrai scrutin, un vrai groupe. Comment la majorité du groupe a-t-elle voté ?</p>
         </div>
         <div class="game" id="game"></div>
       </section>
     </div>
-    <div id="view-quiz" hidden>
+    <div id="view-quiz" class="view" hidden>
       <section class="block" style="margin-top:0">
         <div class="block-h">
-          <h2>Trouve ton groupe</h2>
+          <h1 tabindex="-1">Trouve ton groupe</h1>
           <p>20 vrais votes de l'Assemblée. Répondez, et découvrez quel groupe a voté comme vous.</p>
         </div>
         <div id="quiz"></div>
+      </section>
+    </div>
+
+    <div id="view-lexique" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Lexique</h1>
+        <p class="lead">Les mots de la procédure parlementaire employés sur ce site.</p>
+      </section>
+      <div id="lexique"></div>
+    </div>
+
+    <div id="view-introuvable" class="view" hidden>
+      <section class="pagehead">
+        <h1 tabindex="-1">Page introuvable</h1>
+        <p class="lead" id="nfMsg">Cette adresse ne correspond à aucune page du site.</p>
+        <label class="biglabel" for="qNf">Trouver mon député</label>
+        <div class="search search-big" data-search="qNf">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="qNf" type="search" placeholder="Nom, ville ou code postal" autocomplete="off" aria-label="Trouver mon député">
+            <div class="results" id="qNf-results" hidden></div>
+          </div>
+        <p class="sub">Ou aller à : <a href="/">l'accueil</a> · <a href="/votes">les décisions</a> · <a href="/comprendre">comprendre l'Assemblée</a> · <a href="/jouer">jouer</a></p>
       </section>
     </div>
   </main>
@@ -435,6 +531,16 @@ function initials(d){ return (d.p[0]||'')+(d.n.replace(/^(de |d'|le |la |du )/i,
 function avatar(d,cls){ const g=G[d.g]; return `<span class="av ${cls||''}" style="background:${g?g.col:'#888'}">${esc(initials(d))}</span>`; }
 function textColorOn(hex){ const h=hex.replace('#',''); const r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (r*299+g*587+b*114)/1000>150?'#111':'#fff'; }
 function circo(d){ const n=+d.ci; return `${d.dep} (${d.nd}) · ${n}${n===1?'re':'e'} circ.`; }
+const DEP_DU=['Bas-Rhin','Calvados','Cantal','Cher','Doubs','Finistère','Gard','Gers','Haut-Rhin','Jura','Loir-et-Cher','Loiret','Lot','Lot-et-Garonne','Morbihan','Nord','Pas-de-Calais','Puy-de-Dôme','Rhône','Tarn','Tarn-et-Garonne','Territoire de Belfort',"Val-d'Oise",'Val-de-Marne','Var','Vaucluse'];
+const DEP_SANS=['Paris','Mayotte','Saint-Pierre-et-Miquelon','Wallis-et-Futuna','Saint-Barthélemy et Saint-Martin'];
+function deDep(n){
+  if(DEP_SANS.includes(n)) return 'de '+n;
+  if(n==='Réunion') return 'de La Réunion';
+  if(DEP_DU.includes(n)) return 'du '+n;
+  if(/^(Hauts-|Hautes-|Alpes-|Bouches-|Côtes-|Deux-|Pyrénées-|Français |Ardennes|Landes|Vosges|Yvelines)/.test(n)) return 'des '+n;
+  if(/^[AEÉIOUYH]/.test(n) && !/^Haute-/.test(n)) return "de l'"+n;
+  return 'de la '+n;
+}
 function vTitle(v){ return v.dos || v.t.replace(/^l['’]ensemble (de la |du |des )?/i,'').replace(/\s*\([^)]*\)\.?$/,''); }
 
 
@@ -553,21 +659,22 @@ let selGroup=null;
 function renderLegend(){
   $('#legend').innerHTML = groupsOrdered.map(g=>`<button class="chip" aria-pressed="${selGroup===g.id}" data-g="${g.id}" title="${esc(g.l)}"><span class="sw" style="background:${g.col}"></span>${esc(g.short)}<span class="n">${g.n}</span></button>`).join('');
 }
-$('#legend').addEventListener('click',e=>{ const b=e.target.closest('[data-g]'); if(!b) return; selectGroup(selGroup===b.dataset.g?null:b.dataset.g); });
+$('#legend').addEventListener('click',e=>{ const b=e.target.closest('[data-g]'); if(!b) return; selectGroup(selGroup===b.dataset.g?null:b.dataset.g, true); });
 function highlight(){
   hemi.querySelectorAll('circle').forEach(c=>{ const d=deps[+c.dataset.i]; c.classList.toggle('dim', !!selGroup && d.g!==selGroup); c.classList.remove('hit'); });
   const g=G[selGroup];
   $('#hc-big').textContent = g? g.n : 577;
   $('#hc-lbl').textContent = g? `sièges · ${(100*g.n/577).toFixed(1).replace('.',',')} %` : 'députés';
 }
-function selectGroup(id){
+function selectGroup(id, legendOnly){
   selGroup=id; renderLegend(); highlight();
+  if(legendOnly) return;
   id? renderGroup(G[id]) : renderOverview();
 }
 function renderOverview(){
   const maj=289;
   $('#groupsArea').innerHTML = `
-  <div class="block-h"><h2>Les groupes politiques</h2><p>Majorité absolue : <b class="num">${maj}</b> sièges. Aucun groupe ne l'atteint seul.</p></div>
+  <div class="block-h"><h1 tabindex="-1">Les groupes politiques</h1><p>Majorité absolue : <b class="num">${maj}</b> sièges. Aucun groupe ne l'atteint seul.</p></div>
   <div class="gcards">${groupsOrdered.map(g=>`
     <button class="gcard" data-g="${g.id}">
       <span class="band" style="background:${g.col}"></span>
@@ -582,11 +689,11 @@ function renderOverview(){
   <p class="hint" style="margin-top:10px">Cohésion : part des votes clés où le député a voté comme la majorité de son groupe.</p>`;
 }
 $('#groupsArea').addEventListener('click',e=>{
-  const g=e.target.closest('.gcard'); if(g){ selectGroup(g.dataset.g); return; }
-  const m=e.target.closest('[data-dep]'); if(m){ openDep(+m.dataset.dep); return; }
-  if(e.target.closest('.back')) selectGroup(null);
+  const g=e.target.closest('.gcard'); if(g){ navigate(groupPath(G[g.dataset.g])); return; }
+  const m=e.target.closest('[data-dep]'); if(m){ e.preventDefault(); openDep(+m.dataset.dep); return; }
+  if(e.target.closest('.back')){ navigate('/groupes'); return; }
   const sb=e.target.closest('[data-sort]'); if(sb){ memberSort=sb.dataset.sort; renderGroup(G[selGroup]); }
-  const vv=e.target.closest('[data-openvote]'); if(vv){ gotoVote(+vv.dataset.openvote); }
+  const vv=e.target.closest('[data-openvote]'); if(vv){ e.preventDefault(); gotoVote(+vv.dataset.openvote); }
 });
 let memberSort='nom';
 function renderGroup(g){
@@ -598,7 +705,7 @@ function renderGroup(g){
   $('#groupsArea').innerHTML = `
   <div class="gpanel">
     <div class="gp-top"><span class="band" style="background:${g.col}"></span>
-      <div style="padding-left:6px;display:flex;gap:14px;align-items:center">${groupBadge(g,56)}<div><h2>${esc(g.short)}</h2><div class="full">${esc(g.l)}${g.pres?` · présidé par <a href="#" data-dep="${g.pres.i}" style="font-weight:600">${esc(g.pres.p+' '+g.pres.n)}</a>`:''}</div></div></div>
+      <div style="padding-left:6px;display:flex;gap:14px;align-items:center">${groupBadge(g,56)}<div><h1 tabindex="-1">${esc(g.short)}</h1><div class="full">${esc(g.l)}${g.pres?` · présidé par <a href="#" data-dep="${g.pres.i}" style="font-weight:600">${esc(g.pres.p+' '+g.pres.n)}</a>`:''}</div></div></div>
       <button class="back">← Tous les groupes</button>
     </div>
     <div class="stats">
@@ -651,13 +758,45 @@ qEl.addEventListener('input',()=>{
 resEl.addEventListener('click',e=>{ const b=e.target.closest('[data-dep]'); if(b){ resEl.hidden=true; openDep(+b.dataset.dep); } });
 document.addEventListener('click',e=>{ if(!e.target.closest('.search')) resEl.hidden=true; });
 
+/* ---------- Composants partagés ---------- */
+const slugG = s => norm(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const groupPath = g => '/groupes/'+slugG(g.short);
+function searchDeps(q){
+  q=norm(q.trim()); if(q.length<2) return null;
+  const terms=q.split(/\s+/);
+  return deps.filter(d=> /^\d+[ab]?$/.test(q)? d.nd.toLowerCase()===q.padStart(2,'0') : terms.every(t=>d.key.includes(t)));
+}
+function depLink(d){ return `<a href="/depute/${esc(d.sl)}">${avatar(d)}<span><b>${esc(d.p+' '+d.n)}</b><br><small>${esc(G[d.g]?.short||'')} · ${esc(circo(d))}</small></span></a>`; }
+function bindSearch(id){
+  const inp=document.getElementById(id), res=document.getElementById(id+'-results');
+  if(!inp) return;
+  inp.addEventListener('input',()=>{
+    const hits=searchDeps(inp.value);
+    if(!hits){ res.hidden=true; return; }
+    res.innerHTML = hits.length? hits.slice(0,40).map(depLink).join('') : '<div class="note" style="padding:12px">Aucun député ne correspond.</div>';
+    res.hidden=false;
+  });
+  res.addEventListener('click',e=>{ if(e.target.closest('a')){ res.hidden=true; inp.value=''; } });
+}
+['qHome','qDep','qNf'].forEach(bindSearch);
+document.addEventListener('click',e=>{ if(!e.target.closest('.search')) document.querySelectorAll('.results').forEach(r=>r.hidden=true); });
+document.querySelectorAll('.ndeps').forEach(x=>x.textContent=deps.length);
+
+let depListDone=false;
+function renderDepList(){
+  if(depListDone) return; depListDone=true;
+  const by={}; deps.forEach(d=>(by[d.nd]=by[d.nd]||[]).push(d));
+  const keys=Object.keys(by).sort((a,b)=>a.localeCompare(b,'fr',{numeric:true}));
+  $('#deplist').innerHTML=keys.map(k=>{ const L=by[k].slice().sort((a,b)=>+a.ci-+b.ci);
+    return `<section class="dgrp"><h3>${esc(L[0].dep)} <span class="num">(${esc(k)})</span></h3><ul>${L.map(d=>`<li><a href="/depute/${esc(d.sl)}">${esc(d.p+' '+d.n)}</a> <small>${+d.ci}${+d.ci===1?'re':'e'} circ. · ${esc(G[d.g]?.short||'NI')}</small></li>`).join('')}</ul></section>`; }).join('');
+}
 /* ---------- Deputy sheet ---------- */
 function gauge(pct, color, label, cmp){
   const r=34, c=2*Math.PI*r, off=c*(1-pct/100);
   return `<div class="gauge"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="9"/><circle cx="42" cy="42" r="${r}" fill="none" stroke="${color}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="22" fill="var(--ink)">${pct==null?'–':pct+'%'}</text></svg><div class="k">${label}</div><div class="cmp">${cmp}</div></div>`;
 }
 const overlay=$('#overlay'), sheet=$('#sheet'); let lastFocus=null;
-function openDep(i){
+function openDep(i, opts){
   const d=deps[i], g=G[d.g];
   lastFocus=document.activeElement;
   const mine = votes.filter(v=>v.dt>=d.d);
@@ -714,7 +853,7 @@ function openDep(i){
   overlay.hidden=false; document.body.style.overflow='hidden';
   sheet.querySelector('.sh-close').focus();
 }
-function closeDep(){ overlay.hidden=true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus(); }
+function closeDep(opts){ overlay.hidden=true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus(); }
 overlay.addEventListener('click',e=>{ if(e.target===overlay || e.target.closest('.sh-close')) closeDep(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !overlay.hidden) closeDep(); });
 
@@ -770,20 +909,21 @@ function voteDetail(v,idx){
     </div>
   </div>`;
 }
-$('#cats').addEventListener('click',e=>{ const b=e.target.closest('[data-c]'); if(!b) return; fCat=b.dataset.c; limit=20; openVote=null; renderVotes(); });
+$('#cats').addEventListener('click',e=>{ const b=e.target.closest('[data-c]'); if(!b) return; navigate(b.dataset.c==='all'?'/votes':'/votes/'+b.dataset.c,{keepScroll:true}); });
 $('#resSeg').addEventListener('click',e=>{ const b=e.target.closest('[data-r]'); if(!b) return; fRes=b.dataset.r; document.querySelectorAll('#resSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b)); limit=20; renderVotes(); });
 $('#kindSel').addEventListener('change',e=>{ fKind=e.target.value; limit=20; renderVotes(); });
 $('#vq').addEventListener('input',e=>{ fQ=e.target.value; limit=20; renderVotes(); });
 $('#vlist').addEventListener('keydown',e=>{ const b=e.target.closest('.vsum'); if(b && e.target===b && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); b.click(); } });
 $('#more').addEventListener('click',()=>{ limit+=20; renderVotes(); });
 $('#vlist').addEventListener('click',e=>{ if(e.target.closest('a')||e.target.closest('.ib')||e.target.closest('svg.hemi')) return; const b=e.target.closest('.vsum'); if(!b) return; const i=+b.dataset.v; openVote = openVote===i?null:i; renderVotes(); });
-function gotoVote(idx){
+function gotoVote(idx){ navigate('/scrutin/'+votes[idx].n); }
+function showVoteInList(idx){
   const v=votes[idx]; fCat='all'; fRes='all'; fKind=''; fQ=''; $('#vq').value=''; $('#kindSel').value='';
   document.querySelectorAll('#resSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r==='all'));
-  const L=filtered(); limit=Math.max(20, L.indexOf(v)+5); openVote=idx; showTab('votes'); renderVotes();
-  const el=document.getElementById('v'+idx); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  const L=filtered(); limit=Math.max(20, L.indexOf(v)+5); openVote=idx; renderVotes();
+  const el=document.getElementById('v'+idx); if(el) requestAnimationFrame(()=>el.scrollIntoView({block:'start'}));
 }
-renderVotes();
+function resultSentence(v){ const [p,c,a]=v.sy; return `${v.so==='adopté'?'Adopté':'Rejeté'} : ${p} pour, ${c} contre, ${a} abstention${a>1?'s':''}.`; }
 
 /* ---------- Game ---------- */
 let gameState=null, score={ok:0,tot:0,streak:0,best:0};
@@ -888,28 +1028,123 @@ $('#quiz').addEventListener('click',e=>{
   if(k==='reset'||k==='restart'){ qzState={step:0,ans:{}}; }
   if(k==='prev') qzState.step=Math.max(0,qzState.step-1);
   if(k==='skip'){ qzState.ans[QUIZ[qzState.step].n]='s'; qzState.step++; }
-  if(k==='group'){ showTab('hemi'); selectGroup(c.dataset.g); $('#view-hemi').scrollIntoView({block:'start'}); return; }
+  if(k==='group'){ navigate(groupPath(G[c.dataset.g])); return; }
   qzSave(); renderQuiz();
 });
 
-let startTab='hemi'; try{ startTab=localStorage.getItem('ho-tab')||'hemi'; }catch(e){}
-/* ---------- Tabs ---------- */
-function showTab(t){
-  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
-  ['hemi','votes','game','quiz'].forEach(k=>$('#view-'+k).hidden = k!==t);
-  if(t==='quiz') renderQuiz();
-  if(t==='game' && !gameState) newRound();
-  try{ localStorage.setItem('ho-tab',t); }catch(e){}
+/* ---------- Adresses (History API) ---------- */
+const SITE='Hémicycle ouvert';
+const DESC_DEF=document.querySelector('meta[name="description"]')?.content||'';
+const VIEWS={};
+const NF={view:'introuvable',params:{}};
+const NAV={'depute-liste':'depute',depute:'depute',votes:'votes',scrutin:'votes',comprendre:'comprendre',groupes:'comprendre',groupe:'comprendre',lexique:'comprendre',jouer:'jouer',devine:'jouer',quiz:'jouer'};
+function registerView(name, el, render){ VIEWS[name]={el:typeof el==='string'?$(el):el, render}; }
+function normPath(p){
+  p=String(p).split(/[?#]/)[0];
+  try{ p=decodeURIComponent(p); }catch(e){}
+  p=p.toLowerCase().replace(/\/+$/,'');
+  return p||'/';
 }
-document.querySelector('nav.tabs').addEventListener('click',e=>{ const b=e.target.closest('[data-tab]'); if(b) showTab(b.dataset.tab); });
+function route(path){
+  const s=normPath(path).split('/').filter(Boolean);
+  if(!s.length) return {view:'home',params:{}};
+  if(s.length>2) return NF;
+  const [a,b]=s;
+  switch(a){
+    case 'depute': return b? {view:'depute',params:{slug:b}} : {view:'depute-liste',params:{}};
+    case 'votes': return {view:'votes',params:{cat:b||null}};
+    case 'scrutin': return b && /^\d+$/.test(b)? {view:'scrutin',params:{n:+b}} : NF;
+    case 'comprendre': return b? NF : {view:'comprendre',params:{}};
+    case 'groupes': return b? {view:'groupe',params:{sigle:b}} : {view:'groupes',params:{}};
+    case 'lexique': return b? NF : {view:'lexique',params:{}};
+    case 'jouer': return !b? {view:'jouer',params:{}} : b==='devine'? {view:'devine',params:{}} : b==='groupe'? {view:'quiz',params:{}} : NF;
+  }
+  return NF;
+}
+function metaTag(attr,key){
+  let m=document.head.querySelector(`meta[${attr}="${key}"]`);
+  if(!m){ m=document.createElement('meta'); m.setAttribute(attr,key); document.head.appendChild(m); }
+  return m;
+}
+function setMeta(meta, path){
+  const desc=meta.description||DESC_DEF, url=location.origin+path;
+  document.title = meta.title+' · '+SITE;
+  metaTag('name','description').content=desc;
+  metaTag('property','og:title').content=meta.title;
+  metaTag('property','og:description').content=desc;
+  metaTag('property','og:url').content=url;
+  let c=document.head.querySelector('link[rel="canonical"]');
+  if(!c){ c=document.createElement('link'); c.rel='canonical'; document.head.appendChild(c); }
+  c.href=url;
+}
+let curView=null;
+function render(path, opts){
+  opts=opts||{};
+  const p=normPath(path);
+  let r=route(p), v=VIEWS[r.view], meta=v.render(r.params);
+  if(!meta){ r=NF; v=VIEWS.introuvable; meta=v.render({}); }
+  if(r.view!=='depute' && typeof closeDep==='function' && !overlay.hidden) closeDep({silent:true});
+  Object.values(VIEWS).forEach(x=>{ if(x.el && x.el!==v.el) x.el.hidden=true; });
+  v.el.hidden=false;
+  setMeta(meta, p);
+  document.querySelectorAll('.mainnav a').forEach(a=>{ if(a.dataset.nav===NAV[r.view]) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+  if(!opts.pop && !opts.initial && !opts.keepScroll){ scrollTo(0,0); const h=v.el.querySelector('h1'); if(h) h.focus({preventScroll:true}); }
+  curView=r.view;
+}
+function navigate(path, opts){
+  opts=opts||{};
+  const p=normPath(path), hash=String(path).includes('#')? '#'+String(path).split('#')[1] : '';
+  if(opts.replace) history.replaceState({inApp:!!(history.state&&history.state.inApp)},'',p+hash);
+  else history.pushState({inApp:true},'',p+hash);
+  render(p, opts);
+}
+document.addEventListener('click',e=>{
+  if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a=e.target.closest('a[href^="/"]');
+  if(!a || a.target || a.hasAttribute('download')) return;
+  e.preventDefault(); navigate(a.getAttribute('href'));
+});
+addEventListener('popstate',()=>render(location.pathname,{pop:true}));
 
-
+/* ---------- Vues ---------- */
+registerView('home','#view-home',()=>({title:'Ce que fait votre Assemblée, en clair', description:"Trouver son député, comprendre ce que l'Assemblée nationale a décidé, et comment chaque groupe a voté."}));
+registerView('depute-liste','#view-depute',()=>{ renderDepList(); return {title:'Trouver son député', description:"Les "+deps.length+" députés en exercice, par nom, département ou ville."}; });
+registerView('comprendre','#view-hemi',()=>({title:"Comprendre l'Assemblée", description:"L'hémicycle interactif : les 577 sièges et les groupes politiques de l'Assemblée nationale."}));
+registerView('groupes','#view-groupes',()=>{ selectGroup(null); return {title:'Les groupes politiques', description:"Les groupes politiques de l'Assemblée nationale : sièges, vote avec son groupe, participation."}; });
+registerView('groupe','#view-groupes',({sigle})=>{ const g=groupsOrdered.find(x=>slugG(x.short)===sigle); if(!g) return null; selectGroup(g.id); return {title:`${g.l} (${g.short})`, description:`Le groupe ${g.l} à l'Assemblée nationale : ${g.n} sièges, ses membres et ses derniers votes.`}; });
+registerView('lexique','#view-lexique',()=>({title:'Lexique', description:"Les mots de la procédure parlementaire, définis simplement."}));
+registerView('jouer','#view-jouer',()=>({title:'Jouer', description:"Deux jeux construits à partir des vrais votes de l'Assemblée nationale."}));
+registerView('devine','#view-game',()=>{ if(!gameState) newRound(); return {title:'Devine le vote', description:"Un vrai scrutin, un vrai groupe : comment la majorité du groupe a-t-elle voté ?"}; });
+registerView('quiz','#view-quiz',()=>{ renderQuiz(); return {title:'Trouve ton groupe', description:"20 vrais votes de l'Assemblée : découvrez quel groupe a voté comme vous."}; });
+registerView('introuvable','#view-introuvable',()=>({title:'Page introuvable', description:DESC_DEF}));
+registerView('votes','#view-votes',({cat})=>{
+  if(cat && !CAT[cat]) return null;
+  const c=cat||'all';
+  if(fCat!==c || openVote!=null){ fCat=c; limit=20; openVote=null; }
+  renderVotes();
+  return cat? {title:'Les décisions : '+CAT[cat], description:`Les votes clés de l'Assemblée nationale sur le thème « ${CAT[cat]} ».`}
+            : {title:'Les décisions', description:"Les votes clés de l'Assemblée nationale, classés par thème, avec le vote de chaque groupe."};
+});
+registerView('scrutin','#view-votes',({n})=>{
+  const idx=votes.findIndex(v=>v.n===n); if(idx<0) return null;
+  showVoteInList(idx);
+  return {title:`Scrutin n° ${n} : ${vTitle(votes[idx])}`, description:resultSentence(votes[idx])};
+});
+registerView('depute','#view-depute',({slug})=>{
+  const d=deps.find(x=>x.sl===slug); if(!d) return null;
+  renderDepList(); openDep(d.i,{fromRoute:true});
+  return {title:`${d.p} ${d.n}, ${d.c==='Mme'?'députée':'député'} ${deDep(d.dep)}`, description:`${d.p} ${d.n} (${G[d.g]?G[d.g].l:'non inscrit'}), ${circo(d)} : participation, votes clés, transparence.`};
+});
 /* ---------- Crédits des logos ---------- */
 { const L=Object.entries(LOGOS); if(L.length) $('#logoCredits').innerHTML = 'Logos des groupes : Wikimedia Commons, '+L.map(([k,[,page,lic]])=>`<a href="${esc(page)}" target="_blank" rel="noopener">${esc(k)}</a> (${esc(lic)})`).join(', ')+'. Les autres groupes sont représentés par leur sigle.'; }
 
 /* ---------- Démarrage ---------- */
-if(location.hash==='#votes') startTab='votes'; if(location.hash==='#jeu') startTab='game'; if(location.hash==='#questionnaire') startTab='quiz';
-showTab(['hemi','votes','game','quiz'].includes(startTab)?startTab:'hemi');
+$('#homeFresh').innerHTML = `Données du <b>${fdate(D.generated.slice(0,10))}</b> · dernier scrutin : <b>${fdate(D.lastScrutin)}</b>`;
+{
+  const OLD={'#votes':'/votes','#jeu':'/jouer/devine','#questionnaire':'/jouer/groupe'};
+  if(location.hash && normPath(location.pathname)==='/'){ history.replaceState({inApp:false},'',OLD[location.hash]||'/'); render(location.pathname,{initial:true}); }
+  else { const p=normPath(location.pathname); history.replaceState({inApp:false},'',p+location.hash); render(p,{initial:true}); }
+}
 })();
 </script>
 

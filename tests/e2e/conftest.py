@@ -12,6 +12,7 @@ def base_url():
 def _page(browser, **kw):
     ctx = browser.new_context(**kw)
     page = ctx.new_page()
+    page.set_default_timeout(5000)
     errors = []
     page.on("console", lambda m: errors.append("console: " + m.text) if m.type == "error" else None)
     page.on("pageerror", lambda e: errors.append("pageerror: " + str(e)))

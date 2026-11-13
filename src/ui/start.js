@@ -1,17 +1,10 @@
-/* ---------- Tabs ---------- */
-function showTab(t){
-  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
-  ['hemi','votes','game','quiz'].forEach(k=>$('#view-'+k).hidden = k!==t);
-  if(t==='quiz') renderQuiz();
-  if(t==='game' && !gameState) newRound();
-  try{ localStorage.setItem('ho-tab',t); }catch(e){}
-}
-document.querySelector('nav.tabs').addEventListener('click',e=>{ const b=e.target.closest('[data-tab]'); if(b) showTab(b.dataset.tab); });
-
-
 /* ---------- Crédits des logos ---------- */
 { const L=Object.entries(LOGOS); if(L.length) $('#logoCredits').innerHTML = 'Logos des groupes : Wikimedia Commons, '+L.map(([k,[,page,lic]])=>`<a href="${esc(page)}" target="_blank" rel="noopener">${esc(k)}</a> (${esc(lic)})`).join(', ')+'. Les autres groupes sont représentés par leur sigle.'; }
 
 /* ---------- Démarrage ---------- */
-if(location.hash==='#votes') startTab='votes'; if(location.hash==='#jeu') startTab='game'; if(location.hash==='#questionnaire') startTab='quiz';
-showTab(['hemi','votes','game','quiz'].includes(startTab)?startTab:'hemi');
+$('#homeFresh').innerHTML = `Données du <b>${fdate(D.generated.slice(0,10))}</b> · dernier scrutin : <b>${fdate(D.lastScrutin)}</b>`;
+{
+  const OLD={'#votes':'/votes','#jeu':'/jouer/devine','#questionnaire':'/jouer/groupe'};
+  if(location.hash && normPath(location.pathname)==='/'){ history.replaceState({inApp:false},'',OLD[location.hash]||'/'); render(location.pathname,{initial:true}); }
+  else { const p=normPath(location.pathname); history.replaceState({inApp:false},'',p+location.hash); render(p,{initial:true}); }
+}

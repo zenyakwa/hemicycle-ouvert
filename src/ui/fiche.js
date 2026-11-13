@@ -4,7 +4,7 @@ function gauge(pct, color, label, cmp){
   return `<div class="gauge"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="9"/><circle cx="42" cy="42" r="${r}" fill="none" stroke="${color}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="22" fill="var(--ink)">${pct==null?'–':pct+'%'}</text></svg><div class="k">${label}</div><div class="cmp">${cmp}</div></div>`;
 }
 const overlay=$('#overlay'), sheet=$('#sheet'); let lastFocus=null;
-function openDep(i){
+function openDep(i, opts){
   const d=deps[i], g=G[d.g];
   lastFocus=document.activeElement;
   const mine = votes.filter(v=>v.dt>=d.d);
@@ -61,7 +61,7 @@ function openDep(i){
   overlay.hidden=false; document.body.style.overflow='hidden';
   sheet.querySelector('.sh-close').focus();
 }
-function closeDep(){ overlay.hidden=true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus(); }
+function closeDep(opts){ overlay.hidden=true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus(); }
 overlay.addEventListener('click',e=>{ if(e.target===overlay || e.target.closest('.sh-close')) closeDep(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !overlay.hidden) closeDep(); });
 

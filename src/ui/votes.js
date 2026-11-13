@@ -50,18 +50,19 @@ function voteDetail(v,idx){
     </div>
   </div>`;
 }
-$('#cats').addEventListener('click',e=>{ const b=e.target.closest('[data-c]'); if(!b) return; fCat=b.dataset.c; limit=20; openVote=null; renderVotes(); });
+$('#cats').addEventListener('click',e=>{ const b=e.target.closest('[data-c]'); if(!b) return; navigate(b.dataset.c==='all'?'/votes':'/votes/'+b.dataset.c,{keepScroll:true}); });
 $('#resSeg').addEventListener('click',e=>{ const b=e.target.closest('[data-r]'); if(!b) return; fRes=b.dataset.r; document.querySelectorAll('#resSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b)); limit=20; renderVotes(); });
 $('#kindSel').addEventListener('change',e=>{ fKind=e.target.value; limit=20; renderVotes(); });
 $('#vq').addEventListener('input',e=>{ fQ=e.target.value; limit=20; renderVotes(); });
 $('#vlist').addEventListener('keydown',e=>{ const b=e.target.closest('.vsum'); if(b && e.target===b && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); b.click(); } });
 $('#more').addEventListener('click',()=>{ limit+=20; renderVotes(); });
 $('#vlist').addEventListener('click',e=>{ if(e.target.closest('a')||e.target.closest('.ib')||e.target.closest('svg.hemi')) return; const b=e.target.closest('.vsum'); if(!b) return; const i=+b.dataset.v; openVote = openVote===i?null:i; renderVotes(); });
-function gotoVote(idx){
+function gotoVote(idx){ navigate('/scrutin/'+votes[idx].n); }
+function showVoteInList(idx){
   const v=votes[idx]; fCat='all'; fRes='all'; fKind=''; fQ=''; $('#vq').value=''; $('#kindSel').value='';
   document.querySelectorAll('#resSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r==='all'));
-  const L=filtered(); limit=Math.max(20, L.indexOf(v)+5); openVote=idx; showTab('votes'); renderVotes();
-  const el=document.getElementById('v'+idx); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  const L=filtered(); limit=Math.max(20, L.indexOf(v)+5); openVote=idx; renderVotes();
+  const el=document.getElementById('v'+idx); if(el) requestAnimationFrame(()=>el.scrollIntoView({block:'start'}));
 }
-renderVotes();
+function resultSentence(v){ const [p,c,a]=v.sy; return `${v.so==='adopté'?'Adopté':'Rejeté'} : ${p} pour, ${c} contre, ${a} abstention${a>1?'s':''}.`; }
 
