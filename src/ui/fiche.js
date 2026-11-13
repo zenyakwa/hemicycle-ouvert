@@ -6,7 +6,8 @@ function gauge(pct, color, label, cmp){
 const overlay=$('#overlay'), sheet=$('#sheet'); let lastFocus=null;
 function openDep(i, opts){
   const d=deps[i], g=G[d.g];
-  lastFocus=document.activeElement;
+  opts=opts||{};
+  if(overlay.hidden) lastFocus=document.activeElement;
   const mine = votes.filter(v=>v.dt>=d.d);
   const shown = mine.slice(0,14);
   const partPct=Math.round(100*d.part/Math.max(1,d.elig)), keyPct=Math.round(100*d.kp/Math.max(1,d.ke));
@@ -59,9 +60,20 @@ function openDep(i, opts){
     </div>
   </div>`;
   overlay.hidden=false; document.body.style.overflow='hidden';
+  if(!opts.fromRoute){ const path='/depute/'+d.sl; if(normPath(location.pathname)!==path) history.pushState({inApp:true},'',path); setMeta(depMeta(d), path); }
   sheet.querySelector('.sh-close').focus();
 }
-function closeDep(opts){ overlay.hidden=true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus(); }
+function depMeta(d){ return {title:`${d.p} ${d.n}, ${d.c==='Mme'?'députée':'député'} ${deDep(d.dep)}`, description:`${d.p} ${d.n} (${G[d.g]?G[d.g].l:'non inscrit'}), ${circo(d)} : participation, votes clés, transparence.`}; }
+function closeDep(opts){
+  if(overlay.hidden) return;
+  overlay.hidden=true; document.body.style.overflow='';
+  const f=lastFocus; lastFocus=null;
+  if(!(opts&&opts.silent) && normPath(location.pathname).startsWith('/depute/')){
+    if(history.state && history.state.inApp) history.back();
+    else navigate('/depute',{replace:true,keepScroll:true});
+  }
+  if(f && document.contains(f)) f.focus();
+}
 overlay.addEventListener('click',e=>{ if(e.target===overlay || e.target.closest('.sh-close')) closeDep(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !overlay.hidden) closeDep(); });
 

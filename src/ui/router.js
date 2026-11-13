@@ -47,14 +47,20 @@ let curView=null;
 function render(path, opts){
   opts=opts||{};
   const p=normPath(path);
-  let r=route(p), v=VIEWS[r.view], meta=v.render(r.params);
+  let r=route(p);
+  // fiche député ouverte depuis le site : la vue en cours reste en fond
+  if(r.view==='depute' && curView && curView!=='introuvable' && !opts.initial){
+    const d=deps.find(x=>x.sl===r.params.slug);
+    if(d){ openDep(d.i,{fromRoute:true}); setMeta(depMeta(d), p); return; }
+  }
+  let v=VIEWS[r.view], meta=v.render(r.params);
   if(!meta){ r=NF; v=VIEWS.introuvable; meta=v.render({}); }
   if(r.view!=='depute' && typeof closeDep==='function' && !overlay.hidden) closeDep({silent:true});
   Object.values(VIEWS).forEach(x=>{ if(x.el && x.el!==v.el) x.el.hidden=true; });
   v.el.hidden=false;
   setMeta(meta, p);
   document.querySelectorAll('.mainnav a').forEach(a=>{ if(a.dataset.nav===NAV[r.view]) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
-  if(!opts.pop && !opts.initial && !opts.keepScroll){ scrollTo(0,0); const h=v.el.querySelector('h1'); if(h) h.focus({preventScroll:true}); }
+  if(!opts.pop && !opts.initial && !opts.keepScroll && r.view!=='depute'){ scrollTo(0,0); const h=v.el.querySelector('h1'); if(h) h.focus({preventScroll:true}); }
   curView=r.view;
 }
 function navigate(path, opts){
@@ -99,5 +105,5 @@ registerView('scrutin','#view-votes',({n})=>{
 registerView('depute','#view-depute',({slug})=>{
   const d=deps.find(x=>x.sl===slug); if(!d) return null;
   renderDepList(); openDep(d.i,{fromRoute:true});
-  return {title:`${d.p} ${d.n}, ${d.c==='Mme'?'députée':'député'} ${deDep(d.dep)}`, description:`${d.p} ${d.n} (${G[d.g]?G[d.g].l:'non inscrit'}), ${circo(d)} : participation, votes clés, transparence.`};
+  return depMeta(d);
 });
